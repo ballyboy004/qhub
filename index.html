@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q · HUB</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060606;--surface:#0d0d0d;--border:#1c1c1c;
+  --text:#c8c8c8;--muted:#444;--accent:#c8ff00;
+  --accent-dim:rgba(200,255,0,0.08);--red:#ff4444;--green:#44ff88;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh;padding:32px 28px 64px;max-width:1100px;margin:0 auto}
+
+.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.logo{font-size:11px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.wordmark{font-size:28px;font-weight:700;color:#fff;letter-spacing:-0.02em}
+.wordmark span{color:var(--accent)}
+.clock-block{text-align:right}
+.clock{font-size:28px;font-weight:300;color:#fff;letter-spacing:0.05em;font-variant-numeric:tabular-nums}
+.date{font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-top:4px;text-transform:uppercase}
+
+.section-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+
+.missions{margin-bottom:40px}
+.mission-grid{display:flex;flex-direction:column;gap:8px}
+.mission{display:grid;grid-template-columns:80px 1fr 80px 120px;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;transition:border-color 0.15s}
+.mission:hover{border-color:#2a2a2a}
+.mission.done{border-color:var(--accent);background:var(--accent-dim)}
+.mission-tag{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600}
+.mission-label{font-size:13px;color:#ddd}
+.mission.done .mission-label{color:var(--accent)}
+.mission-count{font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.mission-btns{display:flex;gap:6px;justify-content:flex-end}
+.btn-inc,.btn-dec{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:4px;padding:4px 10px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s}
+.btn-inc:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+.btn-dec:hover{background:#1a1a1a;color:var(--text)}
+
+.bar-row{display:flex;align-items:center;gap:12px;margin-top:10px;margin-bottom:24px}
+.bar-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease}
+.bar-label{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+.tools{margin-bottom:40px}
+.tool-category{margin-bottom:28px}
+.tool-category-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+
+.tool-card{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px 18px;transition:all 0.15s;cursor:pointer;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,var(--accent));opacity:0;transition:opacity 0.15s}
+.tool-card:hover{border-color:#333;transform:translateY(-1px)}
+.tool-card:hover::before{opacity:1}
+.tool-card.offline{opacity:0.4;cursor:default}
+.tool-card.offline:hover{transform:none;border-color:var(--border)}
+.tool-card.offline::before{display:none}
+.tool-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:4px}
+.tool-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.tool-status{margin-top:10px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green)}
+.tool-status.local{color:#ffcc00}
+.tool-status.offline{color:var(--muted)}
+
+.footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border)}
+.footer-text{font-size:10px;color:#2a2a2a;letter-spacing:0.15em;text-transform:uppercase}
+.reset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;background:none;border:none;color:#2a2a2a;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
+.reset-btn:hover{color:var(--red)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.header{animation:fadeUp 0.4s ease both}
+.missions{animation:fadeUp 0.4s ease 0.05s both}
+.tools{animation:fadeUp 0.4s ease 0.1s both}
+
+@media(max-width:600px){
+  html,body{padding:20px 16px 40px}
+  .mission{grid-template-columns:60px 1fr;grid-template-rows:auto auto}
+  .mission-count{display:none}
+  .clock{font-size:20px}
+  .wordmark{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div>
+    <div class="logo">Samuel Quinn Gilmore</div>
+    <div class="wordmark">Q<span>·</span>HUB</div>
+  </div>
+  <div class="clock-block">
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="date" id="date"></div>
+  </div>
+</header>
+
+<section class="missions">
+  <div class="section-label">Daily missions</div>
+  <div class="bar-row">
+    <div class="bar-track"><div class="bar-fill" id="main-bar" style="width:0%"></div></div>
+    <div class="bar-label" id="main-label">0 / 5 complete</div>
+  </div>
+  <div class="mission-grid" id="mission-grid"></div>
+</section>
+
+<section class="tools">
+  <div class="section-label">Tools</div>
+  <div id="tools-container"></div>
+</section>
+
+<footer class="footer">
+  <div class="footer-text">Resets at midnight · noctivegroup.com</div>
+  <button class="reset-btn" onclick="resetDay()">Reset today</button>
+</footer>
+
+<script>
+const MISSIONS = [
+  {id:'jobs',    tag:'Income',  label:'Apply to 5 jobs',             goal:5, color:'#ffcc00'},
+  {id:'emails',  tag:'Noctive', label:'Check email campaign',         goal:1, color:'#4488ff'},
+  {id:'beat',    tag:'Music',   label:'Make a beat',                  goal:1, color:'#aa88ff'},
+  {id:'network', tag:'Network', label:'Reach out to 5 producers',    goal:5, color:'#44ff88'},
+  {id:'promo',   tag:'Promo',   label:'Hit 5 influencers for promo',  goal:5, color:'#ff44aa'},
+];
+
+const CATEGORIES = [
+  {
+    label: 'Noctive — outreach',
+    color: '#4488ff',
+    tools: [
+      {name:'Lead Engine',      desc:'Qualify → Generate → Export',  url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
+      {name:'Instantly',        desc:'Email campaign dashboard',     url:'https://app.instantly.ai',                                          status:'live'},
+    ]
+  },
+  {
+    label: 'Music — network',
+    color: '#44ff88',
+    tools: [
+      {name:'Network Finder',   desc:'Producer credits + IG links',  url:'https://blkbox-network.vercel.app/',                                status:'live'},
+    ]
+  },
+  {
+    label: 'Promo — growth',
+    color: '#ff44aa',
+    tools: [
+      {name:'Influencer Scout', desc:'TikTok creators by hashtag',   url:'https://blkbx-influencer-scout-90osf6fud.vercel.app/',             status:'live'},
+    ]
+  },
+  {
+    label: 'Income — jobs',
+    color: '#ffcc00',
+    tools: [
+      {name:'Job Scout',        desc:'Temecula jobs · run locally',  url:'http://localhost:8000',                                            status:'local'},
+    ]
+  },
+];
+
+const KEY = 'qhub_v1';
+function todayStr(){return new Date().toISOString().slice(0,10)}
+function loadState(){
+  try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');if(s.date===todayStr())return s.counts||{};}catch(e){}
+  return {};
+}
+function saveState(c){localStorage.setItem(KEY,JSON.stringify({date:todayStr(),counts:c}));}
+let counts=loadState();
+
+function renderMissions(){
+  const grid=document.getElementById('mission-grid');
+  grid.innerHTML='';
+  let done=0;
+  MISSIONS.forEach(m=>{
+    const c=counts[m.id]||0;
+    const complete=c>=m.goal;
+    if(complete) done++;
+    const div=document.createElement('div');
+    div.className='mission'+(complete?' done':'');
+    div.innerHTML=`
+      <div class="mission-tag" style="color:${m.color}">${m.tag}</div>
+      <div class="mission-label">${m.label}</div>
+      <div class="mission-count" style="color:${complete?m.color:'#555'}">${c} / ${m.goal}</div>
+      <div class="mission-btns">
+        <button class="btn-dec" onclick="decrement('${m.id}')" ${c===0?'style="opacity:0.2;pointer-events:none"':''}>−1</button>
+        <button class="btn-inc" onclick="increment('${m.id}')" ${complete?'style="background:'+m.color+';color:#000;border-color:'+m.color+'"':''}>
+          ${complete?'✓':'+1'}
+        </button>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+  const pct=Math.round(done/MISSIONS.length*100);
+  document.getElementById('main-bar').style.width=pct+'%';
+  document.getElementById('main-label').textContent=done+' / '+MISSIONS.length+' complete';
+}
+
+function renderTools(){
+  const container=document.getElementById('tools-container');
+  container.innerHTML='';
+  CATEGORIES.forEach(cat=>{
+    const section=document.createElement('div');
+    section.className='tool-category';
+    const label=document.createElement('div');
+    label.className='tool-category-label';
+    label.style.color=cat.color;
+    label.textContent=cat.label;
+    section.appendChild(label);
+    const grid=document.createElement('div');
+    grid.className='tools-grid';
+    cat.tools.forEach(t=>{
+      const isLive=t.status==='live';
+      const isLocal=t.status==='local';
+      const el=document.createElement('a');
+      el.className='tool-card'+(isLive||isLocal?'':' offline');
+      el.style.setProperty('--card-accent',cat.color);
+      if(t.url){el.href=t.url;el.target='_blank';el.rel='noopener';}
+      const statusText=isLive?'● Live':isLocal?'◐ Local':'○ Not deployed';
+      const statusClass=isLive?'':isLocal?'local':'offline';
+      el.innerHTML=`
+        <div class="tool-name">${t.name}</div>
+        <div class="tool-desc">${t.desc}</div>
+        <div class="tool-status ${statusClass}">${statusText}</div>
+      `;
+      grid.appendChild(el);
+    });
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+}
+
+function increment(id){
+  const m=MISSIONS.find(x=>x.id===id);
+  if((counts[id]||0)<m.goal){counts[id]=(counts[id]||0)+1;saveState(counts);renderMissions();}
+}
+function decrement(id){
+  if((counts[id]||0)>0){counts[id]--;saveState(counts);renderMissions();}
+}
+function resetDay(){
+  if(!confirm('Reset today\'s progress?'))return;
+  counts={};saveState(counts);renderMissions();
+}
+
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  document.getElementById('date').textContent=now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  const prev=localStorage.getItem('qhub_lastdate');
+  const today=todayStr();
+  if(prev&&prev!==today){counts={};saveState(counts);renderMissions();}
+  localStorage.setItem('qhub_lastdate',today);
+}
+
+renderMissions();
+renderTools();
+updateClock();
+setInterval(updateClock,1000);
+</script>
+</body>
+</html>
