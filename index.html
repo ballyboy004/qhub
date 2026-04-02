@@ -13,7 +13,6 @@
   --accent-dim:rgba(200,255,0,0.08);--red:#ff4444;--green:#44ff88;
 }
 html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh;padding:32px 28px 64px;max-width:1100px;margin:0 auto}
-
 .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border)}
 .logo{font-size:11px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
 .wordmark{font-size:28px;font-weight:700;color:#fff;letter-spacing:-0.02em}
@@ -21,9 +20,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .clock-block{text-align:right}
 .clock{font-size:28px;font-weight:300;color:#fff;letter-spacing:0.05em;font-variant-numeric:tabular-nums}
 .date{font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-top:4px;text-transform:uppercase}
-
 .section-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-
 .missions{margin-bottom:40px}
 .mission-grid{display:flex;flex-direction:column;gap:8px}
 .mission{display:grid;grid-template-columns:80px 1fr 80px 120px;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;transition:border-color 0.15s}
@@ -37,17 +34,14 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .btn-inc,.btn-dec{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:4px;padding:4px 10px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s}
 .btn-inc:hover{background:var(--accent);color:#000;border-color:var(--accent)}
 .btn-dec:hover{background:#1a1a1a;color:var(--text)}
-
 .bar-row{display:flex;align-items:center;gap:12px;margin-top:10px;margin-bottom:24px}
 .bar-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
 .bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease}
 .bar-label{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
-
 .tools{margin-bottom:40px}
 .tool-category{margin-bottom:28px}
 .tool-category-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
-
 .tool-card{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px 18px;transition:all 0.15s;cursor:pointer;position:relative;overflow:hidden}
 .tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,var(--accent));opacity:0;transition:opacity 0.15s}
 .tool-card:hover{border-color:#333;transform:translateY(-1px)}
@@ -60,17 +54,14 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .tool-status{margin-top:10px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green)}
 .tool-status.local{color:#ffcc00}
 .tool-status.offline{color:var(--muted)}
-
 .footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border)}
 .footer-text{font-size:10px;color:#2a2a2a;letter-spacing:0.15em;text-transform:uppercase}
 .reset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;background:none;border:none;color:#2a2a2a;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
 .reset-btn:hover{color:var(--red)}
-
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .header{animation:fadeUp 0.4s ease both}
 .missions{animation:fadeUp 0.4s ease 0.05s both}
 .tools{animation:fadeUp 0.4s ease 0.1s both}
-
 @media(max-width:600px){
   html,body{padding:20px 16px 40px}
   .mission{grid-template-columns:60px 1fr;grid-template-rows:auto auto}
@@ -108,7 +99,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </section>
 
 <footer class="footer">
-  <div class="footer-text">Resets at midnight · noctivegroup.com</div>
+  <div class="footer-text">Resets at midnight · noctive.io</div>
   <button class="reset-btn" onclick="resetDay()">Reset today</button>
 </footer>
 
@@ -128,6 +119,7 @@ const CATEGORIES = [
     tools: [
       {name:'Lead Engine',      desc:'Qualify → Generate → Export',  url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
       {name:'Instantly',        desc:'Email campaign dashboard',     url:'https://app.instantly.ai',                                          status:'live'},
+      {name:'Noctive Site',     desc:'noctive.io — live',            url:'https://noctive.io',                                                status:'live'},
     ]
   },
   {
