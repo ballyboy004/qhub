@@ -103,17 +103,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .reset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;background:none;border:none;color:#2a2a2a;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
 .reset-btn:hover{color:var(--red)}
 
-/* API KEY MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center}
-.modal-overlay.active{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;width:440px;max-width:90vw}
-.modal-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px}
-.modal-sub{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:20px}
-.modal-label{font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
-.modal-input{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;color:var(--text);outline:none;margin-bottom:14px}
-.modal-input:focus{border-color:#333}
-.modal-row{display:flex;gap:8px}
-
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .header{animation:fadeUp 0.4s ease both}
 .smart-tasks{animation:fadeUp 0.4s ease 0.03s both}
@@ -131,21 +120,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </head>
 <body>
 
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <div class="modal-title">Settings</div>
-    <div class="modal-sub">Your keys are stored in this browser only and sent directly to Anthropic / your server.</div>
-    <div class="modal-label">Anthropic API Key (for in-browser processing)</div>
-    <input class="modal-input" id="modal-anthropic" type="password" placeholder="sk-ant-..." />
-    <div class="modal-label">QHUB Secret Token (for server sync)</div>
-    <input class="modal-input" id="modal-secret" type="password" placeholder="qhub-samuel-..." />
-    <div class="modal-row">
-      <button class="dump-btn primary" onclick="saveSettings()" style="flex:1">Save</button>
-      <button class="dump-btn" onclick="closeModal()" style="flex:1">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <header class="header">
   <div>
     <div class="logo">Samuel Quinn Gilmore</div>
@@ -158,10 +132,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </header>
 
 <section class="smart-tasks">
-  <div class="section-label">
-    <span>Smart tasks</span>
-    <button class="dump-btn" onclick="openModal()" style="font-size:9px;padding:4px 10px">⚙ Settings</button>
-  </div>
+  <div class="section-label"><span>Smart tasks</span></div>
   <textarea class="dump-area" id="dump-area" placeholder="Dump your thoughts — voice note, random ideas, things you need to do. Claude turns it into prioritized tasks."></textarea>
   <div class="dump-row">
     <button class="dump-btn" id="voice-btn" onclick="toggleVoice()">🎙 Voice</button>
@@ -192,7 +163,9 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </footer>
 
 <script>
-// ── DATA ─────────────────────────────────────────────────────────────────────
+// ── CONFIG — hardcoded, no setup needed ───────────────────────────────────────
+const SECRET = 'qhub-samuel-2026-noctive'; // matches QHUB_SECRET in Vercel
+
 const MISSIONS = [
   {id:'jobs',    tag:'Income',  label:'Apply to 5 jobs',            goal:5, color:'#ffcc00'},
   {id:'emails',  tag:'Noctive', label:'Check email campaign',        goal:1, color:'#4488ff'},
@@ -224,10 +197,8 @@ const CAT_COLORS = {
 };
 
 // ── STORAGE ───────────────────────────────────────────────────────────────────
-const DAY_KEY    = 'qhub_v1';
-const TASKS_KEY  = 'qhub_tasks_v2';
-const ANT_KEY    = 'qhub_anthropic_key';
-const SECRET_KEY = 'qhub_secret';
+const DAY_KEY   = 'qhub_v1';
+const TASKS_KEY = 'qhub_tasks_v2';
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function loadState(){
@@ -241,142 +212,74 @@ function loadTasks(){ try{ return JSON.parse(localStorage.getItem(TASKS_KEY)||'[
 function saveTasks(t){ localStorage.setItem(TASKS_KEY, JSON.stringify(t)); }
 let tasks = loadTasks();
 
-const getAnthropicKey = () => localStorage.getItem(ANT_KEY)||'';
-const getSecret       = () => localStorage.getItem(SECRET_KEY)||'';
-
-// ── SETTINGS MODAL ────────────────────────────────────────────────────────────
-function openModal(){
-  document.getElementById('modal-anthropic').value = getAnthropicKey();
-  document.getElementById('modal-secret').value    = getSecret();
-  document.getElementById('modal').classList.add('active');
-}
-function closeModal(){ document.getElementById('modal').classList.remove('active'); }
-function saveSettings(){
-  const a = document.getElementById('modal-anthropic').value.trim();
-  const s = document.getElementById('modal-secret').value.trim();
-  if(a) localStorage.setItem(ANT_KEY, a);
-  if(s) localStorage.setItem(SECRET_KEY, s);
-  closeModal();
+// ── API HELPERS ───────────────────────────────────────────────────────────────
+// All requests go to /api/* on Vercel — no client-side keys needed
+function authH(){
+  return {'Content-Type':'application/json','x-qhub-token': SECRET};
 }
 
 // ── VOICE ─────────────────────────────────────────────────────────────────────
-let recognition = null, isRecording = false;
+let recognition=null, isRecording=false;
 function toggleVoice(){
-  const btn = document.getElementById('voice-btn');
-  const SR  = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const btn=document.getElementById('voice-btn');
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){ alert('Voice requires Chrome.'); return; }
   if(isRecording){ recognition.stop(); return; }
-  recognition = new SR();
-  recognition.continuous = true; recognition.interimResults = false; recognition.lang = 'en-US';
-  recognition.onstart  = () => { isRecording=true;  btn.textContent='⏹ Stop'; btn.classList.add('recording'); };
-  recognition.onresult = (e) => {
+  recognition=new SR();
+  recognition.continuous=true; recognition.interimResults=false; recognition.lang='en-US';
+  recognition.onstart  = ()=>{ isRecording=true;  btn.textContent='⏹ Stop'; btn.classList.add('recording'); };
+  recognition.onresult = (e)=>{
     let t=''; for(let i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript+' ';
     const a=document.getElementById('dump-area'); a.value=(a.value+' '+t.trim()).trim();
   };
-  recognition.onend   = () => { isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
-  recognition.onerror = () => { isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
+  recognition.onend  = ()=>{ isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
+  recognition.onerror= ()=>{ isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
   recognition.start();
 }
 
-// ── AI PROCESSING ─────────────────────────────────────────────────────────────
-const SYSTEM_PROMPT = `You are a task intelligence system for Samuel Quinn Gilmore, a 21-year-old entrepreneur in Temecula CA.
-He runs:
-- Noctive Group: AI automation agency for contractors (GHL, cold email, follow-up automation)
-- Music career as TuneofQ (dark R&B/trap beats, producer networking, sync placements)
-- BLACKBOX: upcoming music industry talent intelligence platform
-- Job search: part-time work in Temecula as income bridge
-
-Take raw brain dump text → extract clear, actionable tasks.
-Categories: Noctive | Music | Income | Network | Promo | BLACKBOX | Life | General
-Priority: 1=today, 2=this week, 3=someday
-
-Return ONLY valid JSON:
-{"tasks":[{"title":"Verb + object","category":"X","priority":1,"note":"context or empty string"}]}
-
-Rules: max 8 tasks, title starts with verb, one action per task.`;
-
+// ── PROCESS DUMP ──────────────────────────────────────────────────────────────
+// Sends raw text to /api/voice on Vercel — Claude processes server-side
 async function processDump(){
-  const raw = document.getElementById('dump-area').value.trim();
+  const raw=document.getElementById('dump-area').value.trim();
   if(!raw){ alert('Nothing to process.'); return; }
-  const apiKey = getAnthropicKey();
-  if(!apiKey){ openModal(); return; }
 
-  const btn = document.getElementById('process-btn');
-  const ind = document.getElementById('proc-ind');
-  btn.disabled = true; ind.classList.add('active');
+  const btn=document.getElementById('process-btn');
+  const ind=document.getElementById('proc-ind');
+  btn.disabled=true; ind.classList.add('active');
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true',
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6', max_tokens:800,
-        system:SYSTEM_PROMPT,
-        messages:[{role:'user',content:raw}],
-      }),
+    const res = await fetch('/api/voice',{
+      method:'POST', headers:authH(),
+      body:JSON.stringify({text: raw}),
     });
-    if(!res.ok) throw new Error((await res.json()).error?.message||'API error');
-    const data  = await res.json();
-    const clean = data.content[0].text.trim().replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
+    if(!res.ok) throw new Error(`Server error ${res.status}`);
+    const data = await res.json();
+    if(!data.ok) throw new Error(data.error||'Unknown error');
 
-    const now = new Date();
-    const ds  = now.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    const ts  = now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
-
-    const newTasks = parsed.tasks.map((t,i)=>({
-      id:`${Date.now()}-${i}`, title:t.title, category:t.category||'General',
-      priority:t.priority||2, note:t.note||'', done:false, date:ds, time:ts, source:'browser',
-    }));
-
-    tasks = [...newTasks, ...tasks];
-    saveTasks(tasks); renderTasks();
-    document.getElementById('dump-area').value = '';
-
-    // push to server too
-    pushToServer(newTasks);
+    // Sync fresh tasks from server
+    await syncFromServer();
+    document.getElementById('dump-area').value='';
 
   } catch(e){
-    alert('Error: '+e.message+'\n\nCheck your API key in ⚙ Settings.');
+    alert('Error: '+e.message);
+    console.error(e);
   } finally {
     btn.disabled=false; ind.classList.remove('active');
   }
 }
 
 // ── SERVER SYNC ───────────────────────────────────────────────────────────────
-function authH(){
-  return {'Content-Type':'application/json','x-qhub-token':getSecret()};
-}
-
 async function syncFromServer(){
-  const secret = getSecret();
-  if(!secret) return;
   try {
-    const res = await fetch('/api/tasks',{headers:authH()});
+    const res=await fetch('/api/tasks',{headers:authH()});
     if(!res.ok) return;
-    const serverTasks = await res.json();
+    const serverTasks=await res.json();
     if(!Array.isArray(serverTasks)||serverTasks.length===0) return;
-    const localIds = new Set(tasks.map(t=>t.id));
-    const newOnes  = serverTasks.filter(t=>!localIds.has(t.id));
-    if(newOnes.length>0){
-      tasks=[...newOnes,...tasks]; saveTasks(tasks); renderTasks();
-    }
-  } catch(e){}
-}
-
-async function pushToServer(newTasks){
-  const secret = getSecret();
-  if(!secret||!newTasks?.length) return;
-  try {
-    await fetch('/api/voice',{
-      method:'POST', headers:authH(),
-      body:JSON.stringify({text:'__prebuilt__', tasks:newTasks}),
-    });
+    // Merge: server is source of truth, keep any local-only tasks
+    const serverIds=new Set(serverTasks.map(t=>t.id));
+    const localOnly=tasks.filter(t=>!serverIds.has(t.id));
+    tasks=[...serverTasks,...localOnly];
+    saveTasks(tasks); renderTasks();
   } catch(e){}
 }
 
@@ -384,10 +287,10 @@ async function pushToServer(newTasks){
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function renderTasks(){
-  const list = document.getElementById('task-list');
-  const v = [...tasks.filter(t=>!t.done),...tasks.filter(t=>t.done)];
+  const list=document.getElementById('task-list');
+  const v=[...tasks.filter(t=>!t.done),...tasks.filter(t=>t.done)];
   if(!v.length){ list.innerHTML='<div class="tasks-empty">No tasks yet. Dump your thoughts and hit Process.</div>'; return; }
-  list.innerHTML = v.map(t=>`
+  list.innerHTML=v.map(t=>`
     <div class="task-item${t.done?' done-task':''}">
       <div class="pdot p${t.priority}"></div>
       <div>
