@@ -11,6 +11,7 @@
   --bg:#060606;--surface:#0d0d0d;--border:#1c1c1c;
   --text:#c8c8c8;--muted:#444;--accent:#c8ff00;
   --accent-dim:rgba(200,255,0,0.08);--red:#ff4444;--green:#44ff88;
+  --blue:#4488ff;--purple:#aa88ff;--orange:#ffaa44;
 }
 html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh;padding:32px 28px 64px;max-width:1100px;margin:0 auto}
 .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border)}
@@ -20,7 +21,46 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .clock-block{text-align:right}
 .clock{font-size:28px;font-weight:300;color:#fff;letter-spacing:0.05em;font-variant-numeric:tabular-nums}
 .date{font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-top:4px;text-transform:uppercase}
-.section-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.section-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+
+/* SMART TASKS */
+.smart-tasks{margin-bottom:40px}
+.dump-area{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--text);outline:none;resize:none;min-height:72px;line-height:1.6;transition:border-color 0.15s;display:block}
+.dump-area:focus{border-color:#333}
+.dump-area::placeholder{color:var(--muted)}
+.dump-row{display:flex;gap:8px;margin-top:8px;margin-bottom:16px;flex-wrap:wrap}
+.dump-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:6px;padding:9px 16px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s;white-space:nowrap}
+.dump-btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.dump-btn.primary:hover{opacity:0.85}
+.dump-btn.primary:disabled{opacity:0.4;cursor:not-allowed}
+.dump-btn.recording{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.processing{font-size:11px;color:var(--muted);padding:8px 0;display:none}
+.processing.active{display:block}
+
+/* TASK LIST */
+.task-list{display:flex;flex-direction:column;gap:6px}
+.task-item{display:grid;grid-template-columns:12px 1fr auto;align-items:start;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;transition:border-color 0.15s}
+.task-item:hover{border-color:#2a2a2a}
+.task-item.done-task{opacity:0.4}
+.task-item.done-task .task-title{text-decoration:line-through}
+.pdot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.p1{background:var(--red)}.p2{background:var(--orange)}.p3{background:var(--green)}
+.task-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.task-cat{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600}
+.task-ts{font-size:9px;color:var(--muted)}
+.task-title{font-size:13px;color:#ddd;line-height:1.5}
+.task-note{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
+.task-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.task-check{background:none;border:1px solid var(--border);border-radius:4px;width:22px;height:22px;cursor:pointer;color:var(--muted);font-size:11px;display:flex;align-items:center;justify-content:center;transition:all 0.12s}
+.task-check:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+.task-item.done-task .task-check{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
+.task-del{background:none;border:none;color:transparent;cursor:pointer;font-size:12px;padding:0;line-height:1;transition:color 0.12s}
+.task-item:hover .task-del{color:var(--muted)}
+.task-del:hover{color:var(--red)!important}
+.tasks-empty{font-size:11px;color:var(--muted);padding:10px 0}
+
+/* MISSIONS */
 .missions{margin-bottom:40px}
 .mission-grid{display:flex;flex-direction:column;gap:8px}
 .mission{display:grid;grid-template-columns:80px 1fr 80px 120px;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;transition:border-color 0.15s}
@@ -38,6 +78,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .bar-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
 .bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease}
 .bar-label{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* TOOLS */
 .tools{margin-bottom:40px}
 .tool-category{margin-bottom:28px}
 .tool-category-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
@@ -53,15 +95,31 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .tool-desc{font-size:11px;color:var(--muted);line-height:1.5}
 .tool-status{margin-top:10px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green)}
 .tool-status.local{color:#ffcc00}
-.tool-status.offline{color:var(--muted)}
+.tool-status.offline-s{color:var(--muted)}
+
+/* FOOTER */
 .footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border)}
 .footer-text{font-size:10px;color:#2a2a2a;letter-spacing:0.15em;text-transform:uppercase}
 .reset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;background:none;border:none;color:#2a2a2a;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
 .reset-btn:hover{color:var(--red)}
+
+/* API KEY MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;width:440px;max-width:90vw}
+.modal-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px}
+.modal-sub{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.modal-label{font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
+.modal-input{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;color:var(--text);outline:none;margin-bottom:14px}
+.modal-input:focus{border-color:#333}
+.modal-row{display:flex;gap:8px}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .header{animation:fadeUp 0.4s ease both}
-.missions{animation:fadeUp 0.4s ease 0.05s both}
-.tools{animation:fadeUp 0.4s ease 0.1s both}
+.smart-tasks{animation:fadeUp 0.4s ease 0.03s both}
+.missions{animation:fadeUp 0.4s ease 0.06s both}
+.tools{animation:fadeUp 0.4s ease 0.09s both}
+
 @media(max-width:600px){
   html,body{padding:20px 16px 40px}
   .mission{grid-template-columns:60px 1fr;grid-template-rows:auto auto}
@@ -73,6 +131,21 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </head>
 <body>
 
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">Settings</div>
+    <div class="modal-sub">Your keys are stored in this browser only and sent directly to Anthropic / your server.</div>
+    <div class="modal-label">Anthropic API Key (for in-browser processing)</div>
+    <input class="modal-input" id="modal-anthropic" type="password" placeholder="sk-ant-..." />
+    <div class="modal-label">QHUB Secret Token (for server sync)</div>
+    <input class="modal-input" id="modal-secret" type="password" placeholder="qhub-samuel-..." />
+    <div class="modal-row">
+      <button class="dump-btn primary" onclick="saveSettings()" style="flex:1">Save</button>
+      <button class="dump-btn" onclick="closeModal()" style="flex:1">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <header class="header">
   <div>
     <div class="logo">Samuel Quinn Gilmore</div>
@@ -83,6 +156,21 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
     <div class="date" id="date"></div>
   </div>
 </header>
+
+<section class="smart-tasks">
+  <div class="section-label">
+    <span>Smart tasks</span>
+    <button class="dump-btn" onclick="openModal()" style="font-size:9px;padding:4px 10px">⚙ Settings</button>
+  </div>
+  <textarea class="dump-area" id="dump-area" placeholder="Dump your thoughts — voice note, random ideas, things you need to do. Claude turns it into prioritized tasks."></textarea>
+  <div class="dump-row">
+    <button class="dump-btn" id="voice-btn" onclick="toggleVoice()">🎙 Voice</button>
+    <button class="dump-btn primary" id="process-btn" onclick="processDump()">⚡ Process into tasks</button>
+    <button class="dump-btn" onclick="clearDone()" style="margin-left:auto">Clear done</button>
+  </div>
+  <div class="processing" id="proc-ind">⚡ Processing your thoughts...</div>
+  <div class="task-list" id="task-list"></div>
+</section>
 
 <section class="missions">
   <div class="section-label">Daily missions</div>
@@ -104,144 +192,304 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </footer>
 
 <script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
 const MISSIONS = [
-  {id:'jobs',    tag:'Income',  label:'Apply to 5 jobs',             goal:5, color:'#ffcc00'},
-  {id:'emails',  tag:'Noctive', label:'Check email campaign',         goal:1, color:'#4488ff'},
-  {id:'beat',    tag:'Music',   label:'Make a beat',                  goal:1, color:'#aa88ff'},
-  {id:'network', tag:'Network', label:'Reach out to 5 producers',    goal:5, color:'#44ff88'},
-  {id:'promo',   tag:'Promo',   label:'Hit 5 influencers for promo',  goal:5, color:'#ff44aa'},
+  {id:'jobs',    tag:'Income',  label:'Apply to 5 jobs',            goal:5, color:'#ffcc00'},
+  {id:'emails',  tag:'Noctive', label:'Check email campaign',        goal:1, color:'#4488ff'},
+  {id:'beat',    tag:'Music',   label:'Make a beat',                 goal:1, color:'#aa88ff'},
+  {id:'network', tag:'Network', label:'Reach out to 5 producers',   goal:5, color:'#44ff88'},
+  {id:'promo',   tag:'Promo',   label:'Hit 5 influencers for promo', goal:5, color:'#ff44aa'},
 ];
 
-const CATEGORIES = [
-  {
-    label: 'Noctive — outreach',
-    color: '#4488ff',
-    tools: [
-      {name:'Lead Engine',      desc:'Qualify → Generate → Export',  url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
-      {name:'Instantly',        desc:'Email campaign dashboard',     url:'https://app.instantly.ai',                                          status:'live'},
-      {name:'Noctive Site',     desc:'noctive.io — live',            url:'https://noctive.io',                                                status:'live'},
-    ]
-  },
-  {
-    label: 'Music — network',
-    color: '#44ff88',
-    tools: [
-      {name:'Network Finder',   desc:'Producer credits + IG links',  url:'https://blkbox-network.vercel.app/',                                status:'live'},
-    ]
-  },
-  {
-    label: 'Promo — growth',
-    color: '#ff44aa',
-    tools: [
-      {name:'Influencer Scout', desc:'TikTok creators by hashtag',   url:'https://blkbx-influencer-scout-90osf6fud.vercel.app/',             status:'live'},
-    ]
-  },
-  {
-    label: 'Income — jobs',
-    color: '#ffcc00',
-    tools: [
-      {name:'Job Scout',        desc:'Temecula jobs · run locally',  url:'http://localhost:8000',                                            status:'local'},
-    ]
-  },
+const TOOL_CATS = [
+  { label:'Noctive — outreach', color:'#4488ff', tools:[
+    {name:'Lead Engine',      desc:'Qualify → Generate → Export', url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
+    {name:'Instantly',        desc:'Email campaign dashboard',    url:'https://app.instantly.ai',                                         status:'live'},
+    {name:'Noctive Site',     desc:'noctive.io — live',           url:'https://noctive.io',                                               status:'live'},
+  ]},
+  { label:'Music — network', color:'#44ff88', tools:[
+    {name:'Network Finder', desc:'Producer credits + IG links', url:'https://blkbox-network.vercel.app/', status:'live'},
+  ]},
+  { label:'Promo — growth', color:'#ff44aa', tools:[
+    {name:'Influencer Scout', desc:'TikTok creators by hashtag', url:'https://blkbx-influencer-scout-90osf6fud.vercel.app/', status:'live'},
+  ]},
+  { label:'Income — jobs', color:'#ffcc00', tools:[
+    {name:'Job Scout', desc:'Temecula jobs · run locally', url:'http://localhost:8000', status:'local'},
+  ]},
 ];
 
-const KEY = 'qhub_v1';
-function todayStr(){return new Date().toISOString().slice(0,10)}
+const CAT_COLORS = {
+  Noctive:'#4488ff',Music:'#aa88ff',Income:'#ffcc00',
+  Network:'#44ff88',Promo:'#ff44aa',BLACKBOX:'#c8ff00',Life:'#c8c8c8',General:'#666',
+};
+
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+const DAY_KEY    = 'qhub_v1';
+const TASKS_KEY  = 'qhub_tasks_v2';
+const ANT_KEY    = 'qhub_anthropic_key';
+const SECRET_KEY = 'qhub_secret';
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
 function loadState(){
-  try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');if(s.date===todayStr())return s.counts||{};}catch(e){}
+  try{ const s=JSON.parse(localStorage.getItem(DAY_KEY)||'{}'); if(s.date===todayStr()) return s.counts||{}; }catch(e){}
   return {};
 }
-function saveState(c){localStorage.setItem(KEY,JSON.stringify({date:todayStr(),counts:c}));}
-let counts=loadState();
+function saveState(c){ localStorage.setItem(DAY_KEY, JSON.stringify({date:todayStr(),counts:c})); }
+let counts = loadState();
 
+function loadTasks(){ try{ return JSON.parse(localStorage.getItem(TASKS_KEY)||'[]'); }catch(e){ return []; } }
+function saveTasks(t){ localStorage.setItem(TASKS_KEY, JSON.stringify(t)); }
+let tasks = loadTasks();
+
+const getAnthropicKey = () => localStorage.getItem(ANT_KEY)||'';
+const getSecret       = () => localStorage.getItem(SECRET_KEY)||'';
+
+// ── SETTINGS MODAL ────────────────────────────────────────────────────────────
+function openModal(){
+  document.getElementById('modal-anthropic').value = getAnthropicKey();
+  document.getElementById('modal-secret').value    = getSecret();
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('active'); }
+function saveSettings(){
+  const a = document.getElementById('modal-anthropic').value.trim();
+  const s = document.getElementById('modal-secret').value.trim();
+  if(a) localStorage.setItem(ANT_KEY, a);
+  if(s) localStorage.setItem(SECRET_KEY, s);
+  closeModal();
+}
+
+// ── VOICE ─────────────────────────────────────────────────────────────────────
+let recognition = null, isRecording = false;
+function toggleVoice(){
+  const btn = document.getElementById('voice-btn');
+  const SR  = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ alert('Voice requires Chrome.'); return; }
+  if(isRecording){ recognition.stop(); return; }
+  recognition = new SR();
+  recognition.continuous = true; recognition.interimResults = false; recognition.lang = 'en-US';
+  recognition.onstart  = () => { isRecording=true;  btn.textContent='⏹ Stop'; btn.classList.add('recording'); };
+  recognition.onresult = (e) => {
+    let t=''; for(let i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript+' ';
+    const a=document.getElementById('dump-area'); a.value=(a.value+' '+t.trim()).trim();
+  };
+  recognition.onend   = () => { isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
+  recognition.onerror = () => { isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
+  recognition.start();
+}
+
+// ── AI PROCESSING ─────────────────────────────────────────────────────────────
+const SYSTEM_PROMPT = `You are a task intelligence system for Samuel Quinn Gilmore, a 21-year-old entrepreneur in Temecula CA.
+He runs:
+- Noctive Group: AI automation agency for contractors (GHL, cold email, follow-up automation)
+- Music career as TuneofQ (dark R&B/trap beats, producer networking, sync placements)
+- BLACKBOX: upcoming music industry talent intelligence platform
+- Job search: part-time work in Temecula as income bridge
+
+Take raw brain dump text → extract clear, actionable tasks.
+Categories: Noctive | Music | Income | Network | Promo | BLACKBOX | Life | General
+Priority: 1=today, 2=this week, 3=someday
+
+Return ONLY valid JSON:
+{"tasks":[{"title":"Verb + object","category":"X","priority":1,"note":"context or empty string"}]}
+
+Rules: max 8 tasks, title starts with verb, one action per task.`;
+
+async function processDump(){
+  const raw = document.getElementById('dump-area').value.trim();
+  if(!raw){ alert('Nothing to process.'); return; }
+  const apiKey = getAnthropicKey();
+  if(!apiKey){ openModal(); return; }
+
+  const btn = document.getElementById('process-btn');
+  const ind = document.getElementById('proc-ind');
+  btn.disabled = true; ind.classList.add('active');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true',
+      },
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6', max_tokens:800,
+        system:SYSTEM_PROMPT,
+        messages:[{role:'user',content:raw}],
+      }),
+    });
+    if(!res.ok) throw new Error((await res.json()).error?.message||'API error');
+    const data  = await res.json();
+    const clean = data.content[0].text.trim().replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+
+    const now = new Date();
+    const ds  = now.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const ts  = now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+
+    const newTasks = parsed.tasks.map((t,i)=>({
+      id:`${Date.now()}-${i}`, title:t.title, category:t.category||'General',
+      priority:t.priority||2, note:t.note||'', done:false, date:ds, time:ts, source:'browser',
+    }));
+
+    tasks = [...newTasks, ...tasks];
+    saveTasks(tasks); renderTasks();
+    document.getElementById('dump-area').value = '';
+
+    // push to server too
+    pushToServer(newTasks);
+
+  } catch(e){
+    alert('Error: '+e.message+'\n\nCheck your API key in ⚙ Settings.');
+  } finally {
+    btn.disabled=false; ind.classList.remove('active');
+  }
+}
+
+// ── SERVER SYNC ───────────────────────────────────────────────────────────────
+function authH(){
+  return {'Content-Type':'application/json','x-qhub-token':getSecret()};
+}
+
+async function syncFromServer(){
+  const secret = getSecret();
+  if(!secret) return;
+  try {
+    const res = await fetch('/api/tasks',{headers:authH()});
+    if(!res.ok) return;
+    const serverTasks = await res.json();
+    if(!Array.isArray(serverTasks)||serverTasks.length===0) return;
+    const localIds = new Set(tasks.map(t=>t.id));
+    const newOnes  = serverTasks.filter(t=>!localIds.has(t.id));
+    if(newOnes.length>0){
+      tasks=[...newOnes,...tasks]; saveTasks(tasks); renderTasks();
+    }
+  } catch(e){}
+}
+
+async function pushToServer(newTasks){
+  const secret = getSecret();
+  if(!secret||!newTasks?.length) return;
+  try {
+    await fetch('/api/voice',{
+      method:'POST', headers:authH(),
+      body:JSON.stringify({text:'__prebuilt__', tasks:newTasks}),
+    });
+  } catch(e){}
+}
+
+// ── TASK RENDER ───────────────────────────────────────────────────────────────
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderTasks(){
+  const list = document.getElementById('task-list');
+  const v = [...tasks.filter(t=>!t.done),...tasks.filter(t=>t.done)];
+  if(!v.length){ list.innerHTML='<div class="tasks-empty">No tasks yet. Dump your thoughts and hit Process.</div>'; return; }
+  list.innerHTML = v.map(t=>`
+    <div class="task-item${t.done?' done-task':''}">
+      <div class="pdot p${t.priority}"></div>
+      <div>
+        <div class="task-meta">
+          <span class="task-cat" style="color:${CAT_COLORS[t.category]||'#666'}">${t.category}</span>
+          <span class="task-ts">${t.date} ${t.time}</span>
+        </div>
+        <div class="task-title">${esc(t.title)}</div>
+        ${t.note?`<div class="task-note">${esc(t.note)}</div>`:''}
+      </div>
+      <div class="task-actions">
+        <button class="task-check" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</button>
+        <button class="task-del" onclick="deleteTask('${t.id}')">×</button>
+      </div>
+    </div>`).join('');
+}
+
+async function toggleTask(id){
+  const t=tasks.find(x=>x.id===id); if(!t) return;
+  t.done=!t.done; saveTasks(tasks); renderTasks();
+  try{ await fetch('/api/tasks',{method:'PATCH',headers:authH(),body:JSON.stringify({id,done:t.done})}); }catch(e){}
+}
+
+async function deleteTask(id){
+  tasks=tasks.filter(x=>x.id!==id); saveTasks(tasks); renderTasks();
+  try{ await fetch(`/api/tasks?id=${id}`,{method:'DELETE',headers:authH()}); }catch(e){}
+}
+
+async function clearDone(){
+  tasks=tasks.filter(t=>!t.done); saveTasks(tasks); renderTasks();
+  try{ await fetch('/api/tasks',{method:'DELETE',headers:authH()}); }catch(e){}
+}
+
+// ── MISSIONS ──────────────────────────────────────────────────────────────────
 function renderMissions(){
   const grid=document.getElementById('mission-grid');
-  grid.innerHTML='';
-  let done=0;
+  grid.innerHTML=''; let done=0;
   MISSIONS.forEach(m=>{
-    const c=counts[m.id]||0;
-    const complete=c>=m.goal;
+    const c=counts[m.id]||0, complete=c>=m.goal;
     if(complete) done++;
     const div=document.createElement('div');
     div.className='mission'+(complete?' done':'');
     div.innerHTML=`
       <div class="mission-tag" style="color:${m.color}">${m.tag}</div>
       <div class="mission-label">${m.label}</div>
-      <div class="mission-count" style="color:${complete?m.color:'#555'}">${c} / ${m.goal}</div>
+      <div class="mission-count" style="color:${complete?m.color:'#555'}">${c}/${m.goal}</div>
       <div class="mission-btns">
-        <button class="btn-dec" onclick="decrement('${m.id}')" ${c===0?'style="opacity:0.2;pointer-events:none"':''}>−1</button>
-        <button class="btn-inc" onclick="increment('${m.id}')" ${complete?'style="background:'+m.color+';color:#000;border-color:'+m.color+'"':''}>
+        <button class="btn-dec" onclick="dec('${m.id}')" ${c===0?'style="opacity:.2;pointer-events:none"':''}>−1</button>
+        <button class="btn-inc" onclick="inc('${m.id}')" ${complete?`style="background:${m.color};color:#000;border-color:${m.color}"`:''}>
           ${complete?'✓':'+1'}
         </button>
-      </div>
-    `;
+      </div>`;
     grid.appendChild(div);
   });
-  const pct=Math.round(done/MISSIONS.length*100);
-  document.getElementById('main-bar').style.width=pct+'%';
+  document.getElementById('main-bar').style.width=Math.round(done/MISSIONS.length*100)+'%';
   document.getElementById('main-label').textContent=done+' / '+MISSIONS.length+' complete';
 }
 
+// ── TOOLS ─────────────────────────────────────────────────────────────────────
 function renderTools(){
-  const container=document.getElementById('tools-container');
-  container.innerHTML='';
-  CATEGORIES.forEach(cat=>{
-    const section=document.createElement('div');
-    section.className='tool-category';
-    const label=document.createElement('div');
-    label.className='tool-category-label';
-    label.style.color=cat.color;
-    label.textContent=cat.label;
-    section.appendChild(label);
-    const grid=document.createElement('div');
-    grid.className='tools-grid';
+  const c=document.getElementById('tools-container'); c.innerHTML='';
+  TOOL_CATS.forEach(cat=>{
+    const sec=document.createElement('div'); sec.className='tool-category';
+    const lbl=document.createElement('div'); lbl.className='tool-category-label';
+    lbl.style.color=cat.color; lbl.textContent=cat.label; sec.appendChild(lbl);
+    const grid=document.createElement('div'); grid.className='tools-grid';
     cat.tools.forEach(t=>{
-      const isLive=t.status==='live';
-      const isLocal=t.status==='local';
+      const live=t.status==='live', local=t.status==='local';
       const el=document.createElement('a');
-      el.className='tool-card'+(isLive||isLocal?'':' offline');
+      el.className='tool-card'+(live||local?'':' offline');
       el.style.setProperty('--card-accent',cat.color);
       if(t.url){el.href=t.url;el.target='_blank';el.rel='noopener';}
-      const statusText=isLive?'● Live':isLocal?'◐ Local':'○ Not deployed';
-      const statusClass=isLive?'':isLocal?'local':'offline';
-      el.innerHTML=`
-        <div class="tool-name">${t.name}</div>
-        <div class="tool-desc">${t.desc}</div>
-        <div class="tool-status ${statusClass}">${statusText}</div>
-      `;
+      el.innerHTML=`<div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div>
+        <div class="tool-status ${live?'':local?'local':'offline-s'}">${live?'● Live':local?'◐ Local':'○ Offline'}</div>`;
       grid.appendChild(el);
     });
-    section.appendChild(grid);
-    container.appendChild(section);
+    sec.appendChild(grid); c.appendChild(sec);
   });
 }
 
-function increment(id){
-  const m=MISSIONS.find(x=>x.id===id);
-  if((counts[id]||0)<m.goal){counts[id]=(counts[id]||0)+1;saveState(counts);renderMissions();}
-}
-function decrement(id){
-  if((counts[id]||0)>0){counts[id]--;saveState(counts);renderMissions();}
-}
-function resetDay(){
-  if(!confirm('Reset today\'s progress?'))return;
-  counts={};saveState(counts);renderMissions();
-}
+function inc(id){ const m=MISSIONS.find(x=>x.id===id); if((counts[id]||0)<m.goal){counts[id]=(counts[id]||0)+1;saveState(counts);renderMissions();} }
+function dec(id){ if((counts[id]||0)>0){counts[id]--;saveState(counts);renderMissions();} }
+function resetDay(){ if(!confirm("Reset today's progress?"))return; counts={};saveState(counts);renderMissions(); }
 
+// ── CLOCK ─────────────────────────────────────────────────────────────────────
 function updateClock(){
   const now=new Date();
   document.getElementById('clock').textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
   document.getElementById('date').textContent=now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const prev=localStorage.getItem('qhub_lastdate');
-  const today=todayStr();
+  const prev=localStorage.getItem('qhub_lastdate'), today=todayStr();
   if(prev&&prev!==today){counts={};saveState(counts);renderMissions();}
   localStorage.setItem('qhub_lastdate',today);
 }
 
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderTasks();
 renderMissions();
 renderTools();
 updateClock();
 setInterval(updateClock,1000);
+syncFromServer();
+setInterval(syncFromServer,30000);
 </script>
 </body>
 </html>
