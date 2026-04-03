@@ -22,8 +22,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .clock{font-size:28px;font-weight:300;color:#fff;letter-spacing:0.05em;font-variant-numeric:tabular-nums}
 .date{font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-top:4px;text-transform:uppercase}
 .section-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-
-/* SMART TASKS */
 .smart-tasks{margin-bottom:40px}
 .dump-area{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--text);outline:none;resize:none;min-height:72px;line-height:1.6;transition:border-color 0.15s;display:block}
 .dump-area:focus{border-color:#333}
@@ -37,8 +35,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 .processing{font-size:11px;color:var(--muted);padding:8px 0;display:none}
 .processing.active{display:block}
-
-/* TASK LIST */
 .task-list{display:flex;flex-direction:column;gap:6px}
 .task-item{display:grid;grid-template-columns:12px 1fr auto;align-items:start;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;transition:border-color 0.15s}
 .task-item:hover{border-color:#2a2a2a}
@@ -59,8 +55,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .task-item:hover .task-del{color:var(--muted)}
 .task-del:hover{color:var(--red)!important}
 .tasks-empty{font-size:11px;color:var(--muted);padding:10px 0}
-
-/* MISSIONS */
 .missions{margin-bottom:40px}
 .mission-grid{display:flex;flex-direction:column;gap:8px}
 .mission{display:grid;grid-template-columns:80px 1fr 80px 120px;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;transition:border-color 0.15s}
@@ -78,8 +72,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .bar-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
 .bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease}
 .bar-label{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* TOOLS */
 .tools{margin-bottom:40px}
 .tool-category{margin-bottom:28px}
 .tool-category-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
@@ -96,19 +88,15 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 .tool-status{margin-top:10px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green)}
 .tool-status.local{color:#ffcc00}
 .tool-status.offline-s{color:var(--muted)}
-
-/* FOOTER */
 .footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border)}
 .footer-text{font-size:10px;color:#2a2a2a;letter-spacing:0.15em;text-transform:uppercase}
 .reset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;background:none;border:none;color:#2a2a2a;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
 .reset-btn:hover{color:var(--red)}
-
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .header{animation:fadeUp 0.4s ease both}
 .smart-tasks{animation:fadeUp 0.4s ease 0.03s both}
 .missions{animation:fadeUp 0.4s ease 0.06s both}
 .tools{animation:fadeUp 0.4s ease 0.09s both}
-
 @media(max-width:600px){
   html,body{padding:20px 16px 40px}
   .mission{grid-template-columns:60px 1fr;grid-template-rows:auto auto}
@@ -132,7 +120,10 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </header>
 
 <section class="smart-tasks">
-  <div class="section-label"><span>Smart tasks</span></div>
+  <div class="section-label">
+    <span>Smart tasks</span>
+    <button class="dump-btn" onclick="manualSync()" style="font-size:9px;padding:4px 10px;letter-spacing:0.1em" id="sync-btn">↻ Sync</button>
+  </div>
   <textarea class="dump-area" id="dump-area" placeholder="Dump your thoughts — voice note, random ideas, things you need to do. Claude turns it into prioritized tasks."></textarea>
   <div class="dump-row">
     <button class="dump-btn" id="voice-btn" onclick="toggleVoice()">🎙 Voice</button>
@@ -163,8 +154,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </footer>
 
 <script>
-// ── CONFIG — hardcoded, no setup needed ───────────────────────────────────────
-const SECRET = 'qhub-samuel-2026-noctive'; // matches QHUB_SECRET in Vercel
+const SECRET = 'qhub-samuel-2026-noctive';
 
 const MISSIONS = [
   {id:'jobs',    tag:'Income',  label:'Apply to 5 jobs',            goal:5, color:'#ffcc00'},
@@ -176,9 +166,9 @@ const MISSIONS = [
 
 const TOOL_CATS = [
   { label:'Noctive — outreach', color:'#4488ff', tools:[
-    {name:'Lead Engine',      desc:'Qualify → Generate → Export', url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
-    {name:'Instantly',        desc:'Email campaign dashboard',    url:'https://app.instantly.ai',                                         status:'live'},
-    {name:'Noctive Site',     desc:'noctive.io — live',           url:'https://noctive.io',                                               status:'live'},
+    {name:'Lead Engine',     desc:'Qualify → Generate → Export', url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
+    {name:'Instantly',       desc:'Email campaign dashboard',    url:'https://app.instantly.ai', status:'live'},
+    {name:'Noctive Site',    desc:'noctive.io — live',           url:'https://noctive.io', status:'live'},
   ]},
   { label:'Music — network', color:'#44ff88', tools:[
     {name:'Network Finder', desc:'Producer credits + IG links', url:'https://blkbox-network.vercel.app/', status:'live'},
@@ -196,27 +186,19 @@ const CAT_COLORS = {
   Network:'#44ff88',Promo:'#ff44aa',BLACKBOX:'#c8ff00',Life:'#c8c8c8',General:'#666',
 };
 
-// ── STORAGE ───────────────────────────────────────────────────────────────────
-const DAY_KEY   = 'qhub_v1';
-const TASKS_KEY = 'qhub_tasks_v2';
-
+const DAY_KEY='qhub_v1', TASKS_KEY='qhub_tasks_v2';
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function loadState(){
   try{ const s=JSON.parse(localStorage.getItem(DAY_KEY)||'{}'); if(s.date===todayStr()) return s.counts||{}; }catch(e){}
   return {};
 }
-function saveState(c){ localStorage.setItem(DAY_KEY, JSON.stringify({date:todayStr(),counts:c})); }
-let counts = loadState();
-
+function saveState(c){ localStorage.setItem(DAY_KEY,JSON.stringify({date:todayStr(),counts:c})); }
+let counts=loadState();
 function loadTasks(){ try{ return JSON.parse(localStorage.getItem(TASKS_KEY)||'[]'); }catch(e){ return []; } }
-function saveTasks(t){ localStorage.setItem(TASKS_KEY, JSON.stringify(t)); }
-let tasks = loadTasks();
+function saveTasks(t){ localStorage.setItem(TASKS_KEY,JSON.stringify(t)); }
+let tasks=loadTasks();
 
-// ── API HELPERS ───────────────────────────────────────────────────────────────
-// All requests go to /api/* on Vercel — no client-side keys needed
-function authH(){
-  return {'Content-Type':'application/json','x-qhub-token': SECRET};
-}
+function authH(){ return {'Content-Type':'application/json','x-qhub-token':SECRET}; }
 
 // ── VOICE ─────────────────────────────────────────────────────────────────────
 let recognition=null, isRecording=false;
@@ -227,63 +209,59 @@ function toggleVoice(){
   if(isRecording){ recognition.stop(); return; }
   recognition=new SR();
   recognition.continuous=true; recognition.interimResults=false; recognition.lang='en-US';
-  recognition.onstart  = ()=>{ isRecording=true;  btn.textContent='⏹ Stop'; btn.classList.add('recording'); };
-  recognition.onresult = (e)=>{
+  recognition.onstart  =()=>{ isRecording=true;  btn.textContent='⏹ Stop'; btn.classList.add('recording'); };
+  recognition.onresult =(e)=>{
     let t=''; for(let i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript+' ';
     const a=document.getElementById('dump-area'); a.value=(a.value+' '+t.trim()).trim();
   };
-  recognition.onend  = ()=>{ isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
-  recognition.onerror= ()=>{ isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
+  recognition.onend  =()=>{ isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
+  recognition.onerror=()=>{ isRecording=false; btn.textContent='🎙 Voice'; btn.classList.remove('recording'); };
   recognition.start();
 }
 
-// ── PROCESS DUMP ──────────────────────────────────────────────────────────────
-// Sends raw text to /api/voice on Vercel — Claude processes server-side
+// ── PROCESS ───────────────────────────────────────────────────────────────────
 async function processDump(){
   const raw=document.getElementById('dump-area').value.trim();
   if(!raw){ alert('Nothing to process.'); return; }
-
   const btn=document.getElementById('process-btn');
   const ind=document.getElementById('proc-ind');
   btn.disabled=true; ind.classList.add('active');
-
   try {
-    const res = await fetch('/api/voice',{
-      method:'POST', headers:authH(),
-      body:JSON.stringify({text: raw}),
-    });
+    const res=await fetch('/api/voice',{method:'POST',headers:authH(),body:JSON.stringify({text:raw})});
     if(!res.ok) throw new Error(`Server error ${res.status}`);
-    const data = await res.json();
+    const data=await res.json();
     if(!data.ok) throw new Error(data.error||'Unknown error');
-
-    // Sync fresh tasks from server
     await syncFromServer();
     document.getElementById('dump-area').value='';
-
   } catch(e){
-    alert('Error: '+e.message);
-    console.error(e);
+    alert('Error: '+e.message); console.error(e);
   } finally {
     btn.disabled=false; ind.classList.remove('active');
   }
 }
 
-// ── SERVER SYNC ───────────────────────────────────────────────────────────────
+// ── SYNC ──────────────────────────────────────────────────────────────────────
 async function syncFromServer(){
   try {
     const res=await fetch('/api/tasks',{headers:authH()});
     if(!res.ok) return;
     const serverTasks=await res.json();
-    if(!Array.isArray(serverTasks)||serverTasks.length===0) return;
-    // Merge: server is source of truth, keep any local-only tasks
+    if(!Array.isArray(serverTasks)) return;
     const serverIds=new Set(serverTasks.map(t=>t.id));
     const localOnly=tasks.filter(t=>!serverIds.has(t.id));
     tasks=[...serverTasks,...localOnly];
     saveTasks(tasks); renderTasks();
-  } catch(e){}
+  } catch(e){ console.error('sync error',e); }
 }
 
-// ── TASK RENDER ───────────────────────────────────────────────────────────────
+async function manualSync(){
+  const btn=document.getElementById('sync-btn');
+  btn.textContent='↻ Syncing...';
+  await syncFromServer();
+  btn.textContent='↻ Sync';
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function renderTasks(){
@@ -313,12 +291,10 @@ async function toggleTask(id){
   t.done=!t.done; saveTasks(tasks); renderTasks();
   try{ await fetch('/api/tasks',{method:'PATCH',headers:authH(),body:JSON.stringify({id,done:t.done})}); }catch(e){}
 }
-
 async function deleteTask(id){
   tasks=tasks.filter(x=>x.id!==id); saveTasks(tasks); renderTasks();
   try{ await fetch(`/api/tasks?id=${id}`,{method:'DELETE',headers:authH()}); }catch(e){}
 }
-
 async function clearDone(){
   tasks=tasks.filter(t=>!t.done); saveTasks(tasks); renderTasks();
   try{ await fetch('/api/tasks',{method:'DELETE',headers:authH()}); }catch(e){}
@@ -391,8 +367,8 @@ renderMissions();
 renderTools();
 updateClock();
 setInterval(updateClock,1000);
-syncFromServer();
-setInterval(syncFromServer,30000);
+syncFromServer();             // sync immediately on load
+setInterval(syncFromServer,5000); // then every 5 seconds
 </script>
 </body>
 </html>
