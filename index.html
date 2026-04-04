@@ -4,221 +4,247 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Q · HUB</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Inter:wght@900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#060606;--surface:#0d0d0d;--surface2:#111;--border:#1c1c1c;
-  --text:#c8c8c8;--muted:#444;--accent:#c8ff00;
-  --accent-dim:rgba(200,255,0,0.08);--red:#ff4444;--green:#44ff88;
-  --blue:#4488ff;--purple:#aa88ff;--orange:#ffaa44;--yellow:#facc15;
+  --bg:#0c0c0e;
+  --surface:#131315;
+  --surface2:#1a1a1c;
+  --border:rgba(255,255,255,0.08);
+  --border-hover:rgba(255,255,255,0.15);
+  --text:#ffffff;
+  --muted:#52525b;
+  --muted2:#3f3f46;
+  --mono:'IBM Plex Mono',monospace;
+  --inter:'Inter',sans-serif;
+  --accent:#ffffff;
+  --red:#ef4444;
+  --green:#22c55e;
+  --blue:#3b82f6;
+  --purple:#a78bfa;
+  --orange:#f97316;
+  --yellow:#eab308;
 }
-html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh;padding:32px 28px 80px;max-width:1200px;margin:0 auto}
+html,body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;padding:40px 48px 100px;max-width:1280px;margin:0 auto;-webkit-font-smoothing:antialiased}
 
 /* ── HEADER ── */
-.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-.logo{font-size:11px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
-.wordmark{font-family:'Inter',sans-serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:-0.02em}
-.wordmark span{color:var(--accent)}
+.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.header-left .eyebrow{font-size:10px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.header-left .wordmark{font-family:var(--inter);font-size:24px;font-weight:900;letter-spacing:-0.02em;color:var(--text)}
 .clock-block{text-align:right}
-.clock{font-size:28px;font-weight:300;color:#fff;letter-spacing:0.05em;font-variant-numeric:tabular-nums}
-.date{font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-top:4px;text-transform:uppercase}
+.clock{font-family:var(--inter);font-size:24px;font-weight:900;letter-spacing:-0.02em;color:var(--text);font-variant-numeric:tabular-nums}
+.date-line{font-size:10px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-top:6px}
 
-/* ── SHARED ── */
-.section-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.qbtn{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:6px;padding:8px 14px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s;white-space:nowrap}
-.qbtn:hover{border-color:#333;color:var(--text)}
-.qbtn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+/* ── SECTION LABEL ── */
+.section-label{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+
+/* ── BUTTONS ── */
+.qbtn{font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;border-radius:4px;transition:all 0.15s;white-space:nowrap}
+.qbtn:hover{border-color:var(--border-hover);color:var(--text)}
+.qbtn.primary{background:var(--text);color:var(--bg);border-color:var(--text);font-family:var(--inter);font-weight:900;letter-spacing:-0.01em}
 .qbtn.primary:hover{opacity:0.85}
-.qbtn.primary:disabled{opacity:0.4;cursor:not-allowed}
+.qbtn.primary:disabled{opacity:0.3;cursor:not-allowed}
 .qbtn.danger:hover{border-color:var(--red);color:var(--red)}
-.qbtn.sm{font-size:9px;padding:4px 10px;letter-spacing:0.1em}
+.qbtn.sm{font-size:9px;padding:4px 12px}
 .qbtn.recording{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:6px}
-.card:hover{border-color:#252525}
-section{margin-bottom:44px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:4px;transition:border-color 0.15s}
+.card:hover{border-color:var(--border-hover)}
+section{margin-bottom:48px}
 
 /* ── REVENUE BAR ── */
-.revenue-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:44px}
-.rev-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:18px 20px}
-.rev-value{font-family:'Inter',sans-serif;font-size:30px;font-weight:900;letter-spacing:-0.02em;line-height:1;margin-bottom:5px}
-.rev-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
-.rev-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.revenue-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:48px}
+.rev-card{background:var(--surface);padding:24px 28px;cursor:pointer;transition:background 0.15s}
+.rev-card:hover{background:var(--surface2)}
+.rev-value{font-family:var(--inter);font-size:32px;font-weight:900;letter-spacing:-0.03em;color:var(--text);line-height:1;margin-bottom:6px}
+.rev-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)}
+.rev-sub{font-size:11px;color:var(--muted2);margin-top:4px}
 
 /* ── SMART TASKS ── */
-.dump-area{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--text);outline:none;resize:none;min-height:64px;line-height:1.6;transition:border-color 0.15s;display:block}
-.dump-area:focus{border-color:#333}
-.dump-area::placeholder{color:var(--muted)}
-.dump-row{display:flex;gap:8px;margin-top:8px;margin-bottom:14px;flex-wrap:wrap}
-.processing{font-size:11px;color:var(--muted);padding:6px 0;display:none}
+.dump-area{width:100%;font-family:var(--mono);font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:14px 16px;color:var(--text);outline:none;resize:none;min-height:68px;line-height:1.7;transition:border-color 0.15s;display:block}
+.dump-area:focus{border-color:var(--border-hover)}
+.dump-area::placeholder{color:var(--muted2)}
+.dump-row{display:flex;gap:8px;margin-top:10px;margin-bottom:16px;flex-wrap:wrap}
+.processing{font-size:11px;color:var(--muted);padding:6px 0;display:none;letter-spacing:0.05em}
 .processing.active{display:block}
-.task-list{display:flex;flex-direction:column;gap:6px}
-.task-item{display:grid;grid-template-columns:10px 1fr auto;align-items:start;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:11px 14px;transition:border-color 0.15s}
-.task-item:hover{border-color:#2a2a2a}
+
+/* ── TASK LIST ── */
+.task-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.task-item{display:grid;grid-template-columns:4px 1fr auto;align-items:start;background:var(--surface);transition:background 0.15s}
+.task-item:hover{background:var(--surface2)}
 .task-item.done-task{opacity:0.35}
 .task-item.done-task .task-title{text-decoration:line-through}
-.pdot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.task-priority-bar{width:4px;align-self:stretch;flex-shrink:0}
 .p1{background:var(--red)}.p2{background:var(--orange)}.p3{background:var(--green)}
-.task-meta{display:flex;align-items:center;gap:8px;margin-bottom:3px}
-.task-cat{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600}
+.task-body{padding:12px 16px}
+.task-meta{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.task-cat{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600}
 .task-ts{font-size:9px;color:var(--muted)}
-.task-title{font-size:12px;color:#ddd;line-height:1.5}
+.task-title{font-size:12px;color:var(--text);line-height:1.5}
 .task-note{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
-.task-actions{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-.task-check{background:none;border:1px solid var(--border);border-radius:4px;width:20px;height:20px;cursor:pointer;color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;transition:all 0.12s}
-.task-check:hover{background:var(--accent);color:#000;border-color:var(--accent)}
-.task-item.done-task .task-check{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
+.task-actions{display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding:12px 14px}
+.task-check{background:none;border:1px solid var(--border);border-radius:3px;width:20px;height:20px;cursor:pointer;color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;transition:all 0.12s;flex-shrink:0}
+.task-check:hover{background:var(--text);color:var(--bg);border-color:var(--text)}
+.task-item.done-task .task-check{background:rgba(255,255,255,0.06);color:var(--text);border-color:var(--border-hover)}
 .task-del{background:none;border:none;color:transparent;cursor:pointer;font-size:11px;padding:0;line-height:1;transition:color 0.12s}
-.task-item:hover .task-del{color:var(--muted)}
+.task-item:hover .task-del{color:var(--muted2)}
 .task-del:hover{color:var(--red)!important}
-.tasks-empty{font-size:11px;color:var(--muted);padding:10px 0}
+.tasks-empty{font-size:11px;color:var(--muted);padding:16px;letter-spacing:0.04em}
 
 /* ── MISSIONS ── */
-.mission-grid{display:flex;flex-direction:column;gap:7px}
-.mission{display:grid;grid-template-columns:80px 1fr 70px 110px;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:11px 16px;transition:border-color 0.15s}
-.mission:hover{border-color:#252525}
-.mission.done{border-color:var(--accent);background:var(--accent-dim)}
+.mission-grid{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.mission{display:grid;grid-template-columns:100px 1fr 80px 120px;align-items:center;gap:16px;background:var(--surface);padding:14px 20px;transition:background 0.15s}
+.mission:hover{background:var(--surface2)}
+.mission.done{background:var(--surface2)}
 .mission-tag{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600}
-.mission-label{font-size:12px;color:#ddd}
-.mission.done .mission-label{color:var(--accent)}
-.mission-count{font-size:12px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.mission-label{font-size:12px;color:var(--text)}
+.mission.done .mission-label{color:var(--muted)}
+.mission-count{font-size:12px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.mission.done .mission-count{color:var(--text)}
 .mission-btns{display:flex;gap:6px;justify-content:flex-end}
-.btn-inc,.btn-dec{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:4px;padding:3px 9px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s}
-.btn-inc:hover{background:var(--accent);color:#000;border-color:var(--accent)}
-.btn-dec:hover{background:#1a1a1a;color:var(--text)}
-.bar-row{display:flex;align-items:center;gap:12px;margin-top:10px;margin-bottom:22px}
-.bar-track{flex:1;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
-.bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease}
-.bar-label{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.btn-inc,.btn-dec{font-family:var(--mono);font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:3px;padding:3px 10px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s}
+.btn-inc:hover{background:var(--text);color:var(--bg);border-color:var(--text)}
+.btn-dec:hover{background:var(--surface2);color:var(--text)}
+.bar-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.bar-track{flex:1;height:1px;background:var(--border);border-radius:1px;overflow:hidden}
+.bar-fill{height:100%;background:var(--text);border-radius:1px;transition:width 0.4s ease}
+.bar-label{font-size:10px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:0.1em}
 
-/* ── NOCTIVE PIPELINE ── */
-.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
-.pipe-col{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px}
-.pipe-col-header{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-.pipe-count{font-family:'Inter',sans-serif;font-size:20px;font-weight:900;color:var(--text)}
-.pipe-leads{display:flex;flex-direction:column;gap:5px;min-height:40px}
-.pipe-lead{font-size:10px;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:5px 8px;cursor:pointer;transition:border-color 0.12s;display:flex;align-items:center;justify-content:space-between;gap:6px}
-.pipe-lead:hover{border-color:#333}
+/* ── PIPELINE ── */
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.pipe-col{background:var(--surface);padding:16px}
+.pipe-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pipe-stage-name{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)}
+.pipe-count{font-family:var(--inter);font-size:22px;font-weight:900;letter-spacing:-0.02em;color:var(--text)}
+.pipe-leads{display:flex;flex-direction:column;gap:4px;min-height:32px}
+.pipe-lead{font-size:10px;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:5px 8px;display:flex;align-items:center;justify-content:space-between;gap:6px;transition:border-color 0.12s}
+.pipe-lead:hover{border-color:var(--border-hover)}
 .pipe-lead span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pipe-lead-del{background:none;border:none;color:transparent;cursor:pointer;font-size:11px;flex-shrink:0;transition:color 0.12s}
-.pipe-lead:hover .pipe-lead-del{color:var(--muted)}
+.pipe-lead:hover .pipe-lead-del{color:var(--muted2)}
 .pipe-lead-del:hover{color:var(--red)!important}
-.pipe-add-row{display:flex;gap:6px;margin-top:8px}
-.pipe-input{font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:5px 8px;color:var(--text);outline:none;flex:1;min-width:0}
-.pipe-input::placeholder{color:var(--muted)}
-.pipe-input:focus{border-color:#333}
-.pipe-add-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s;flex-shrink:0}
-.pipe-add-btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+.pipe-add-row{display:flex;gap:6px;margin-top:10px}
+.pipe-input{font-family:var(--mono);font-size:10px;background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:5px 8px;color:var(--text);outline:none;flex:1;min-width:0;transition:border-color 0.15s}
+.pipe-input:focus{border-color:var(--border-hover)}
+.pipe-input::placeholder{color:var(--muted2)}
+.pipe-add-btn{font-family:var(--mono);font-size:11px;border:1px solid var(--border);border-radius:3px;padding:5px 10px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s;flex-shrink:0}
+.pipe-add-btn:hover{background:var(--text);color:var(--bg);border-color:var(--text)}
 
-/* ── TIKTOK OUTREACH ── */
-.outreach-grid{display:flex;flex-direction:column;gap:6px}
-.outreach-item{display:grid;grid-template-columns:1fr 90px 90px 90px auto;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;transition:border-color 0.15s}
-.outreach-item:hover{border-color:#2a2a2a}
+/* ── OUTREACH ── */
+.outreach-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.outreach-item{display:grid;grid-template-columns:1fr 100px 100px 80px auto;align-items:center;gap:12px;background:var(--surface);padding:11px 16px;transition:background 0.15s}
+.outreach-item:hover{background:var(--surface2)}
 .outreach-handle{font-size:12px;color:var(--text)}
 .outreach-price{font-size:11px;color:var(--muted)}
-.outreach-status{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px;text-align:center}
-.status-waiting{background:rgba(255,170,68,0.12);color:var(--orange)}
-.status-quoted{background:rgba(68,136,255,0.12);color:var(--blue)}
-.status-sent{background:rgba(170,136,255,0.12);color:var(--purple)}
-.status-posted{background:rgba(68,255,136,0.12);color:var(--green)}
-.status-pass{background:rgba(255,68,68,0.08);color:var(--muted)}
-.outreach-date{font-size:9px;color:var(--muted)}
+.outreach-date{font-size:10px;color:var(--muted2)}
 .outreach-del{background:none;border:none;color:transparent;cursor:pointer;font-size:11px;padding:0;transition:color 0.12s}
-.outreach-item:hover .outreach-del{color:var(--muted)}
+.outreach-item:hover .outreach-del{color:var(--muted2)}
 .outreach-del:hover{color:var(--red)!important}
-.outreach-add-row{display:grid;grid-template-columns:1fr 100px 120px auto;gap:8px;margin-top:10px}
-.outreach-input{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);outline:none;transition:border-color 0.15s}
-.outreach-input:focus{border-color:#333}
-.outreach-input::placeholder{color:var(--muted)}
-.outreach-select{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);outline:none;cursor:pointer}
-.outreach-select option{background:var(--bg)}
+.status-badge{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid}
+.status-waiting{border-color:rgba(249,115,22,0.3);color:var(--orange);background:rgba(249,115,22,0.06)}
+.status-quoted{border-color:rgba(59,130,246,0.3);color:var(--blue);background:rgba(59,130,246,0.06)}
+.status-sent{border-color:rgba(167,139,250,0.3);color:var(--purple);background:rgba(167,139,250,0.06)}
+.status-posted{border-color:rgba(34,197,94,0.3);color:var(--green);background:rgba(34,197,94,0.06)}
+.status-pass{border-color:var(--border);color:var(--muted);background:transparent}
+.outreach-add-row{display:grid;grid-template-columns:1fr 110px 130px auto;gap:8px;margin-top:12px}
+.field-input{font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:9px 12px;color:var(--text);outline:none;transition:border-color 0.15s}
+.field-input:focus{border-color:var(--border-hover)}
+.field-input::placeholder{color:var(--muted2)}
+.field-select{font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:9px 10px;color:var(--text);outline:none;cursor:pointer}
+.field-select option{background:var(--bg)}
 
 /* ── BEAT LOG ── */
-.beat-grid{display:flex;flex-direction:column;gap:6px}
-.beat-item{display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;transition:border-color 0.15s}
-.beat-item:hover{border-color:#2a2a2a}
-.beat-date{font-size:9px;color:var(--muted);white-space:nowrap}
+.beat-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.beat-item{display:grid;grid-template-columns:80px 1fr 120px 140px auto;align-items:center;gap:12px;background:var(--surface);padding:11px 16px;transition:background 0.15s}
+.beat-item:hover{background:var(--surface2)}
+.beat-date{font-size:10px;color:var(--muted2)}
 .beat-name{font-size:12px;color:var(--text)}
-.beat-vibe{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:rgba(170,136,255,0.1);color:var(--purple)}
-.beat-sent{font-size:9px;color:var(--green)}
+.beat-vibe{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);border-radius:2px;padding:2px 8px;display:inline-block}
+.beat-sent{font-size:10px;color:var(--muted)}
 .beat-del{background:none;border:none;color:transparent;cursor:pointer;font-size:11px;padding:0;transition:color 0.12s}
-.beat-item:hover .beat-del{color:var(--muted)}
+.beat-item:hover .beat-del{color:var(--muted2)}
 .beat-del:hover{color:var(--red)!important}
-.beat-add-row{display:grid;grid-template-columns:1fr 120px 140px auto;gap:8px;margin-top:10px}
+.beat-add-row{display:grid;grid-template-columns:1fr 130px 150px auto;gap:8px;margin-top:12px}
+.empty-state{font-size:11px;color:var(--muted);padding:16px;letter-spacing:0.04em}
 
 /* ── TOOLS ── */
-.tool-category{margin-bottom:24px}
-.tool-category-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
-.tool-card{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px 16px;transition:all 0.15s;position:relative;overflow:hidden}
-.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,var(--accent));opacity:0;transition:opacity 0.15s}
-.tool-card:hover{border-color:#333;transform:translateY(-1px)}
-.tool-card:hover::before{opacity:1}
-.tool-card.offline{opacity:0.4;cursor:default}
-.tool-card.offline:hover{transform:none;border-color:var(--border)}
-.tool-card.offline::before{display:none}
-.tool-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:3px}
+.tool-category{margin-bottom:28px}
+.tool-cat-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.tool-card{display:block;text-decoration:none;background:var(--surface);padding:18px 20px;transition:background 0.15s;position:relative}
+.tool-card:hover{background:var(--surface2)}
+.tool-card.offline{opacity:0.35;cursor:default}
+.tool-card.offline:hover{background:var(--surface)}
+.tool-accent{position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity 0.15s}
+.tool-card:not(.offline):hover .tool-accent{opacity:1}
+.tool-name{font-family:var(--inter);font-size:14px;font-weight:900;letter-spacing:-0.01em;color:var(--text);margin-bottom:4px}
 .tool-desc{font-size:10px;color:var(--muted);line-height:1.5}
-.tool-status{margin-top:9px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green)}
+.tool-status{margin-top:12px;font-size:9px;letter-spacing:0.15em;text-transform:uppercase}
+.tool-status.live{color:var(--green)}
 .tool-status.local{color:var(--yellow)}
-.tool-status.off{color:var(--muted)}
+.tool-status.off{color:var(--muted2)}
 
 /* ── FOOTER ── */
-.footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border)}
-.footer-text{font-size:10px;color:#222;letter-spacing:0.15em;text-transform:uppercase}
-.reset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;background:none;border:none;color:#222;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
+.footer{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--border);margin-top:8px}
+.footer-text{font-size:10px;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase}
+.reset-btn{font-family:var(--mono);font-size:10px;background:none;border:none;color:var(--muted2);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
 .reset-btn:hover{color:var(--red)}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-header{animation:fadeUp 0.35s ease both}
-section{animation:fadeUp 0.35s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.header{animation:fadeUp 0.3s ease both}
+.revenue-bar{animation:fadeUp 0.3s ease 0.04s both}
+section{animation:fadeUp 0.3s ease 0.06s both}
 
-@media(max-width:700px){
-  html,body{padding:20px 16px 60px}
+@media(max-width:768px){
+  html,body{padding:24px 20px 80px}
   .pipeline{grid-template-columns:repeat(2,1fr)}
-  .mission{grid-template-columns:60px 1fr;grid-template-rows:auto auto}
+  .mission{grid-template-columns:80px 1fr;grid-template-rows:auto auto}
   .mission-count{display:none}
   .revenue-bar{grid-template-columns:repeat(2,1fr)}
-  .outreach-grid{display:none}
   .clock{font-size:20px}
+  .beat-item,.outreach-item{grid-template-columns:1fr auto}
 }
 </style>
 </head>
 <body>
 
 <header class="header">
-  <div>
-    <div class="logo">Samuel Quinn Gilmore</div>
-    <div class="wordmark">Q<span>·</span>HUB</div>
+  <div class="header-left">
+    <div class="eyebrow">Samuel Quinn Gilmore</div>
+    <div class="wordmark">Q · HUB</div>
   </div>
   <div class="clock-block">
     <div class="clock" id="clock">--:--:--</div>
-    <div class="date" id="date"></div>
+    <div class="date-line" id="date"></div>
   </div>
 </header>
 
 <!-- ── REVENUE ── -->
 <div class="revenue-bar">
-  <div class="rev-card">
-    <div class="rev-value" id="rev-mrr" style="color:var(--accent)">$0</div>
+  <div class="rev-card" title="Double-click to edit">
+    <div class="rev-value" id="rev-mrr">$0</div>
     <div class="rev-label">Noctive MRR</div>
     <div class="rev-sub" id="rev-clients">0 clients</div>
   </div>
-  <div class="rev-card">
-    <div class="rev-value" id="rev-beats" style="color:var(--purple)">$0</div>
+  <div class="rev-card" title="Double-click to edit">
+    <div class="rev-value" id="rev-beats">$0</div>
     <div class="rev-label">Beat Sales</div>
     <div class="rev-sub" id="rev-beats-count">0 sales</div>
   </div>
-  <div class="rev-card">
-    <div class="rev-value" id="rev-other" style="color:var(--blue)">$0</div>
+  <div class="rev-card" title="Double-click to edit">
+    <div class="rev-value" id="rev-other">$0</div>
     <div class="rev-label">Other Income</div>
     <div class="rev-sub">one-time / misc</div>
   </div>
   <div class="rev-card">
-    <div class="rev-value" id="rev-total" style="color:#fff">$0</div>
+    <div class="rev-value" id="rev-total">$0</div>
     <div class="rev-label">Total This Month</div>
-    <div class="rev-sub" id="rev-goal">Goal: $497 (1 client)</div>
+    <div class="rev-sub" id="rev-goal">Goal: $497</div>
   </div>
 </div>
 
@@ -236,7 +262,7 @@ section{animation:fadeUp 0.35s ease both}
     <button class="qbtn" id="voice-btn" onclick="toggleVoice()">🎙 Voice</button>
     <button class="qbtn primary" id="process-btn" onclick="processDump()">⚡ Process into tasks</button>
   </div>
-  <div class="processing" id="proc-ind">⚡ Processing...</div>
+  <div class="processing" id="proc-ind">Processing your thoughts...</div>
   <div class="task-list" id="task-list"></div>
 </section>
 
@@ -252,7 +278,7 @@ section{animation:fadeUp 0.35s ease both}
 
 <!-- ── NOCTIVE PIPELINE ── -->
 <section>
-  <div class="section-label"><span>Noctive pipeline</span></div>
+  <div class="section-label">Noctive pipeline</div>
   <div class="pipeline" id="pipeline"></div>
 </section>
 
@@ -262,11 +288,11 @@ section{animation:fadeUp 0.35s ease both}
     <span>TikTok outreach</span>
     <span id="outreach-stats" style="font-size:10px;color:var(--muted)"></span>
   </div>
-  <div class="outreach-grid" id="outreach-grid"></div>
-  <div class="outreach-add-row" style="margin-top:10px">
-    <input class="outreach-input" id="out-handle" placeholder="@handle" />
-    <input class="outreach-input" id="out-price" placeholder="Price (e.g. $50)" />
-    <select class="outreach-select" id="out-status">
+  <div class="outreach-list" id="outreach-grid"></div>
+  <div class="outreach-add-row" style="margin-top:12px">
+    <input class="field-input" id="out-handle" placeholder="@handle" />
+    <input class="field-input" id="out-price" placeholder="Price (e.g. $50)" />
+    <select class="field-select" id="out-status">
       <option value="waiting">Waiting</option>
       <option value="quoted">Quoted</option>
       <option value="sent">Beat Sent</option>
@@ -283,11 +309,11 @@ section{animation:fadeUp 0.35s ease both}
     <span>Beat log</span>
     <span id="beat-stats" style="font-size:10px;color:var(--muted)"></span>
   </div>
-  <div class="beat-grid" id="beat-grid"></div>
-  <div class="beat-add-row" style="margin-top:10px">
-    <input class="outreach-input" id="beat-name" placeholder="Beat name / vibe" />
-    <input class="outreach-input" id="beat-vibe" placeholder="Genre (dark r&b, trap...)" />
-    <input class="outreach-input" id="beat-sent" placeholder="Sent to (optional)" />
+  <div class="beat-list" id="beat-grid"></div>
+  <div class="beat-add-row" style="margin-top:12px">
+    <input class="field-input" id="beat-name" placeholder="Beat name / vibe" />
+    <input class="field-input" id="beat-vibe" placeholder="Genre" />
+    <input class="field-input" id="beat-sent" placeholder="Sent to (optional)" />
     <button class="qbtn primary" onclick="addBeat()">+ Log</button>
   </div>
 </section>
@@ -308,48 +334,48 @@ section{animation:fadeUp 0.35s ease both}
 const SECRET = 'qhub-samuel-2026-noctive';
 
 const MISSIONS = [
-  {id:'jobs',    tag:'Income',  label:'Apply to 5 jobs',            goal:5, color:'#ffcc00'},
-  {id:'emails',  tag:'Noctive', label:'Check email campaign',        goal:1, color:'#4488ff'},
-  {id:'beat',    tag:'Music',   label:'Make a beat',                 goal:1, color:'#aa88ff'},
-  {id:'network', tag:'Network', label:'Reach out to 5 producers',   goal:5, color:'#44ff88'},
-  {id:'promo',   tag:'Promo',   label:'Hit 5 influencers for promo', goal:5, color:'#ff44aa'},
+  {id:'jobs',    tag:'Income',  label:'Apply to 5 jobs',             goal:5, color:'#eab308'},
+  {id:'emails',  tag:'Noctive', label:'Check email campaign',         goal:1, color:'#3b82f6'},
+  {id:'beat',    tag:'Music',   label:'Make a beat',                  goal:1, color:'#a78bfa'},
+  {id:'network', tag:'Network', label:'Reach out to 5 producers',    goal:5, color:'#22c55e'},
+  {id:'promo',   tag:'Promo',   label:'Hit 5 influencers for promo',  goal:5, color:'#f97316'},
 ];
 
 const PIPE_STAGES = [
-  {id:'emailed', label:'Emailed',  color:'#4488ff'},
-  {id:'opened',  label:'Opened',   color:'#ffcc00'},
-  {id:'replied', label:'Replied',  color:'#aa88ff'},
-  {id:'demo',    label:'Demo',     color:'#ffaa44'},
-  {id:'closed',  label:'Closed ✓', color:'#44ff88'},
+  {id:'emailed', label:'Emailed'},
+  {id:'opened',  label:'Opened'},
+  {id:'replied', label:'Replied'},
+  {id:'demo',    label:'Demo'},
+  {id:'closed',  label:'Closed'},
 ];
 
 const TOOL_CATS = [
-  { label:'Noctive — outreach', color:'#4488ff', tools:[
+  { label:'Noctive — outreach', color:'#3b82f6', tools:[
     {name:'Lead Engine',     desc:'Generate + push to Instantly', url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
     {name:'Instantly',       desc:'Email campaign dashboard',     url:'https://app.instantly.ai', status:'live'},
     {name:'Noctive Site',    desc:'noctive.io',                   url:'https://noctive.io', status:'live'},
   ]},
-  { label:'Music — network', color:'#44ff88', tools:[
+  { label:'Music — network', color:'#a78bfa', tools:[
     {name:'Network Finder',   desc:'Producer credits + IG links', url:'https://blkbox-network.vercel.app/', status:'live'},
     {name:'Influencer Scout', desc:'TikTok creators by hashtag',  url:'https://blkbx-influencer-scout-90osf6fud.vercel.app/', status:'live'},
   ]},
-  { label:'Income — jobs', color:'#ffcc00', tools:[
+  { label:'Income — jobs', color:'#eab308', tools:[
     {name:'Job Scout', desc:'Temecula jobs · run locally', url:'http://localhost:8000', status:'local'},
   ]},
 ];
 
 const CAT_COLORS = {
-  Noctive:'#4488ff',Music:'#aa88ff',Income:'#ffcc00',
-  Network:'#44ff88',Promo:'#ff44aa',BLACKBOX:'#c8ff00',Life:'#c8c8c8',General:'#666',
+  Noctive:'#3b82f6',Music:'#a78bfa',Income:'#eab308',
+  Network:'#22c55e',Promo:'#f97316',BLACKBOX:'#ffffff',Life:'#71717a',General:'#52525b',
 };
 
 // ── STORAGE ───────────────────────────────────────────────────────────────────
-const DAY_KEY       = 'qhub_v1';
-const TASKS_KEY     = 'qhub_tasks_v2';
-const PIPE_KEY      = 'qhub_pipeline';
-const OUTREACH_KEY  = 'qhub_outreach';
-const BEATS_KEY     = 'qhub_beats';
-const REVENUE_KEY   = 'qhub_revenue';
+const DAY_KEY      = 'qhub_v1';
+const TASKS_KEY    = 'qhub_tasks_v2';
+const PIPE_KEY     = 'qhub_pipeline';
+const OUTREACH_KEY = 'qhub_outreach';
+const BEATS_KEY    = 'qhub_beats';
+const REVENUE_KEY  = 'qhub_revenue';
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function loadState(){
@@ -366,37 +392,29 @@ let tasks    = load(TASKS_KEY, []);
 let pipeline = load(PIPE_KEY, {emailed:[],opened:[],replied:[],demo:[],closed:[]});
 let outreach = load(OUTREACH_KEY, []);
 let beats    = load(BEATS_KEY, []);
-let revenue  = load(REVENUE_KEY, {mrr:0, clients:0, beatSales:0, beatCount:0, other:0});
+let revenue  = load(REVENUE_KEY, {mrr:0,clients:0,beatSales:0,beatCount:0,other:0});
 
 function authH(){ return {'Content-Type':'application/json','x-qhub-token':SECRET}; }
 
 // ── REVENUE ───────────────────────────────────────────────────────────────────
 function renderRevenue(){
-  const total = revenue.mrr + revenue.beatSales + revenue.other;
-  document.getElementById('rev-mrr').textContent     = '$'+revenue.mrr.toLocaleString();
-  document.getElementById('rev-clients').textContent  = revenue.clients+' client'+(revenue.clients!==1?'s':'');
-  document.getElementById('rev-beats').textContent    = '$'+revenue.beatSales.toLocaleString();
+  const total=revenue.mrr+revenue.beatSales+revenue.other;
+  document.getElementById('rev-mrr').textContent    = '$'+revenue.mrr.toLocaleString();
+  document.getElementById('rev-clients').textContent = revenue.clients+' client'+(revenue.clients!==1?'s':'');
+  document.getElementById('rev-beats').textContent   = '$'+revenue.beatSales.toLocaleString();
   document.getElementById('rev-beats-count').textContent = revenue.beatCount+' sale'+(revenue.beatCount!==1?'s':'');
-  document.getElementById('rev-other').textContent    = '$'+revenue.other.toLocaleString();
-  document.getElementById('rev-total').textContent    = '$'+total.toLocaleString();
-  const nextGoal = revenue.clients===0?'Goal: $497 (1 client)':'Goal: $'+(497*(revenue.clients+1)).toLocaleString()+' ('+(revenue.clients+1)+' clients)';
-  document.getElementById('rev-goal').textContent     = nextGoal;
+  document.getElementById('rev-other').textContent   = '$'+revenue.other.toLocaleString();
+  document.getElementById('rev-total').textContent   = '$'+total.toLocaleString();
+  document.getElementById('rev-goal').textContent    = revenue.clients===0?'Goal: $497 (1 client)':'Goal: $'+(497*(revenue.clients+1)).toLocaleString();
 }
-
-// Double-click any revenue card to edit
 document.querySelectorAll('.rev-card').forEach((card,i)=>{
-  card.style.cursor='pointer';
-  card.title='Click to edit';
   card.addEventListener('dblclick',()=>{
-    const fields=['mrr+clients','beatSales+beatCount','other'];
     if(i===0){
-      const v=prompt('Monthly Recurring Revenue ($):',revenue.mrr);
-      const c=prompt('Number of clients:',revenue.clients);
+      const v=prompt('MRR ($):',revenue.mrr); const c=prompt('Clients:',revenue.clients);
       if(v!==null) revenue.mrr=parseInt(v)||0;
       if(c!==null) revenue.clients=parseInt(c)||0;
     } else if(i===1){
-      const v=prompt('Beat sales total ($):',revenue.beatSales);
-      const c=prompt('Number of sales:',revenue.beatCount);
+      const v=prompt('Beat sales ($):',revenue.beatSales); const c=prompt('# sales:',revenue.beatCount);
       if(v!==null) revenue.beatSales=parseInt(v)||0;
       if(c!==null) revenue.beatCount=parseInt(c)||0;
     } else if(i===2){
@@ -426,7 +444,7 @@ function toggleVoice(){
   recognition.start();
 }
 
-// ── PROCESS DUMP ──────────────────────────────────────────────────────────────
+// ── PROCESS ───────────────────────────────────────────────────────────────────
 async function processDump(){
   const raw=document.getElementById('dump-area').value.trim();
   if(!raw){ alert('Nothing to process.'); return; }
@@ -444,7 +462,7 @@ async function processDump(){
   finally{ btn.disabled=false; ind.classList.remove('active'); }
 }
 
-// ── SERVER SYNC ───────────────────────────────────────────────────────────────
+// ── SYNC ──────────────────────────────────────────────────────────────────────
 async function syncFromServer(){
   try {
     const res=await fetch('/api/tasks',{headers:authH()});
@@ -472,10 +490,10 @@ function renderTasks(){
   if(!v.length){ list.innerHTML='<div class="tasks-empty">No tasks yet. Dump your thoughts and hit Process.</div>'; return; }
   list.innerHTML=v.map(t=>`
     <div class="task-item${t.done?' done-task':''}">
-      <div class="pdot p${t.priority}"></div>
-      <div>
+      <div class="task-priority-bar p${t.priority}"></div>
+      <div class="task-body">
         <div class="task-meta">
-          <span class="task-cat" style="color:${CAT_COLORS[t.category]||'#666'}">${t.category}</span>
+          <span class="task-cat" style="color:${CAT_COLORS[t.category]||'#52525b'}">${t.category}</span>
           <span class="task-ts">${t.date} ${t.time}</span>
         </div>
         <div class="task-title">${esc(t.title)}</div>
@@ -514,12 +532,10 @@ function renderMissions(){
     div.innerHTML=`
       <div class="mission-tag" style="color:${m.color}">${m.tag}</div>
       <div class="mission-label">${m.label}</div>
-      <div class="mission-count" style="color:${complete?m.color:'#555'}">${c}/${m.goal}</div>
+      <div class="mission-count">${c}/${m.goal}</div>
       <div class="mission-btns">
         <button class="btn-dec" onclick="dec('${m.id}')" ${c===0?'style="opacity:.2;pointer-events:none"':''}>−1</button>
-        <button class="btn-inc" onclick="inc('${m.id}')" ${complete?`style="background:${m.color};color:#000;border-color:${m.color}"`:''}>
-          ${complete?'✓':'+1'}
-        </button>
+        <button class="btn-inc" onclick="inc('${m.id}')">${complete?'✓':'+1'}</button>
       </div>`;
     grid.appendChild(div);
   });
@@ -537,10 +553,10 @@ function renderPipeline(){
     col.className='pipe-col';
     col.innerHTML=`
       <div class="pipe-col-header">
-        <span style="color:${stage.color}">${stage.label}</span>
-        <span class="pipe-count" style="color:${stage.color}">${leads.length}</span>
+        <span class="pipe-stage-name">${stage.label}</span>
+        <span class="pipe-count">${leads.length}</span>
       </div>
-      <div class="pipe-leads" id="pipe-${stage.id}">
+      <div class="pipe-leads">
         ${leads.map((l,i)=>`
           <div class="pipe-lead">
             <span>${esc(l)}</span>
@@ -548,7 +564,7 @@ function renderPipeline(){
           </div>`).join('')}
       </div>
       <div class="pipe-add-row">
-        <input class="pipe-input" id="pipe-input-${stage.id}" placeholder="Company name" onkeydown="if(event.key==='Enter')addLead('${stage.id}')" />
+        <input class="pipe-input" id="pipe-input-${stage.id}" placeholder="Add company" onkeydown="if(event.key==='Enter')addLead('${stage.id}')" />
         <button class="pipe-add-btn" onclick="addLead('${stage.id}')">+</button>
       </div>`;
     container.appendChild(col);
@@ -573,18 +589,14 @@ function renderOutreach(){
   const stats=document.getElementById('outreach-stats');
   const posted=outreach.filter(o=>o.status==='posted').length;
   stats.textContent=outreach.length+' pages · '+posted+' posted';
-
-  if(!outreach.length){ grid.innerHTML='<div class="tasks-empty">No outreach logged yet.</div>'; return; }
-
-  const statusMap={
-    waiting:'Waiting',quoted:'Quoted',sent:'Beat Sent',posted:'Posted ✓',pass:'Pass'
-  };
+  if(!outreach.length){ grid.innerHTML='<div class="empty-state">No outreach logged yet.</div>'; return; }
+  const statusMap={waiting:'Waiting',quoted:'Quoted',sent:'Beat Sent',posted:'Posted ✓',pass:'Pass'};
   grid.innerHTML=outreach.map((o,i)=>`
     <div class="outreach-item">
       <div class="outreach-handle">${esc(o.handle)}</div>
       <div class="outreach-price">${esc(o.price||'—')}</div>
       <div>
-        <select class="outreach-select" style="font-size:9px;padding:3px 6px" onchange="updateOutreachStatus(${i},this.value)">
+        <select class="field-select" style="font-size:9px;padding:3px 8px" onchange="updateOutreachStatus(${i},this.value)">
           ${['waiting','quoted','sent','posted','pass'].map(s=>`<option value="${s}"${o.status===s?' selected':''}>${statusMap[s]}</option>`).join('')}
         </select>
       </div>
@@ -594,87 +606,76 @@ function renderOutreach(){
 }
 
 function addOutreach(){
-  const handle=document.getElementById('out-handle').value.trim();
-  if(!handle) return;
-  const price=document.getElementById('out-price').value.trim();
-  const status=document.getElementById('out-status').value;
-  const now=new Date();
+  const handle=document.getElementById('out-handle').value.trim(); if(!handle) return;
   outreach.unshift({
-    handle, price, status,
-    date: now.toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+    handle, price:document.getElementById('out-price').value.trim(),
+    status:document.getElementById('out-status').value,
+    date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
   });
   document.getElementById('out-handle').value='';
   document.getElementById('out-price').value='';
   save(OUTREACH_KEY,outreach); renderOutreach();
 }
-function updateOutreachStatus(i,status){
-  outreach[i].status=status;
-  save(OUTREACH_KEY,outreach); renderOutreach();
-}
-function deleteOutreach(i){
-  outreach.splice(i,1);
-  save(OUTREACH_KEY,outreach); renderOutreach();
-}
+function updateOutreachStatus(i,s){ outreach[i].status=s; save(OUTREACH_KEY,outreach); renderOutreach(); }
+function deleteOutreach(i){ outreach.splice(i,1); save(OUTREACH_KEY,outreach); renderOutreach(); }
 
 // ── BEAT LOG ──────────────────────────────────────────────────────────────────
 function renderBeats(){
   const grid=document.getElementById('beat-grid');
-  const stats=document.getElementById('beat-stats');
-  stats.textContent=beats.length+' beat'+(beats.length!==1?'s':'')+' logged';
-
-  if(!beats.length){ grid.innerHTML='<div class="tasks-empty">No beats logged yet. Make one tonight.</div>'; return; }
-
+  document.getElementById('beat-stats').textContent=beats.length+' beat'+(beats.length!==1?'s':'')+' logged';
+  if(!beats.length){ grid.innerHTML='<div class="empty-state">No beats logged yet.</div>'; return; }
   grid.innerHTML=beats.map((b,i)=>`
     <div class="beat-item">
       <div class="beat-date">${b.date}</div>
       <div class="beat-name">${esc(b.name)}</div>
-      <div class="beat-vibe">${esc(b.vibe)}</div>
+      <div><span class="beat-vibe">${esc(b.vibe)}</span></div>
       <div class="beat-sent">${b.sent?'→ '+esc(b.sent):''}</div>
       <button class="beat-del" onclick="deleteBeat(${i})">×</button>
     </div>`).join('');
 }
 
 function addBeat(){
-  const name=document.getElementById('beat-name').value.trim();
-  if(!name) return;
-  const vibe=document.getElementById('beat-vibe').value.trim()||'beat';
-  const sent=document.getElementById('beat-sent').value.trim();
-  const now=new Date();
+  const name=document.getElementById('beat-name').value.trim(); if(!name) return;
   beats.unshift({
-    name, vibe, sent,
-    date: now.toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+    name, vibe:document.getElementById('beat-vibe').value.trim()||'beat',
+    sent:document.getElementById('beat-sent').value.trim(),
+    date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
   });
   document.getElementById('beat-name').value='';
   document.getElementById('beat-vibe').value='';
   document.getElementById('beat-sent').value='';
   save(BEATS_KEY,beats); renderBeats();
-  // auto-tick the beat mission
   if((counts['beat']||0)<1){ counts['beat']=1; saveState(counts); renderMissions(); }
 }
-function deleteBeat(i){
-  beats.splice(i,1);
-  save(BEATS_KEY,beats); renderBeats();
-}
+function deleteBeat(i){ beats.splice(i,1); save(BEATS_KEY,beats); renderBeats(); }
 
 // ── TOOLS ─────────────────────────────────────────────────────────────────────
 function renderTools(){
-  const c=document.getElementById('tools-container'); c.innerHTML='';
+  const container=document.getElementById('tools-container');
+  container.innerHTML='';
   TOOL_CATS.forEach(cat=>{
-    const sec=document.createElement('div'); sec.className='tool-category';
-    const lbl=document.createElement('div'); lbl.className='tool-category-label';
-    lbl.style.color=cat.color; lbl.textContent=cat.label; sec.appendChild(lbl);
-    const grid=document.createElement('div'); grid.className='tools-grid';
+    const div=document.createElement('div');
+    div.className='tool-category';
+    const lbl=document.createElement('div');
+    lbl.className='tool-cat-label';
+    lbl.textContent=cat.label;
+    div.appendChild(lbl);
+    const grid=document.createElement('div');
+    grid.className='tools-grid';
     cat.tools.forEach(t=>{
       const live=t.status==='live', local=t.status==='local';
       const el=document.createElement('a');
       el.className='tool-card'+(live||local?'':' offline');
-      el.style.setProperty('--card-accent',cat.color);
       if(t.url){el.href=t.url;el.target='_blank';el.rel='noopener';}
-      el.innerHTML=`<div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div>
-        <div class="tool-status ${live?'':local?'local':'off'}">${live?'● Live':local?'◐ Local':'○ Offline'}</div>`;
+      el.innerHTML=`
+        <div class="tool-accent" style="background:${cat.color}"></div>
+        <div class="tool-name">${t.name}</div>
+        <div class="tool-desc">${t.desc}</div>
+        <div class="tool-status ${live?'live':local?'local':'off'}">${live?'● Live':local?'◐ Local':'○ Offline'}</div>`;
       grid.appendChild(el);
     });
-    sec.appendChild(grid); c.appendChild(sec);
+    div.appendChild(grid);
+    container.appendChild(div);
   });
 }
 
