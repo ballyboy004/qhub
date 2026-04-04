@@ -1,0 +1,9 @@
+/* ── LAUNCH BAR ── */
+.launch-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:12px 0;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.launch-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;padding:10px 18px;border:1px solid var(--border);border-radius:3px;background:var(--surface);transition:all 0.15s;white-space:nowrap}
+.launch-link:hover{border-color:var(--border-hover);background:var(--surface2)}
+.launch-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.launch-info{display:flex;flex-direction:column;gap:2px}
+.launch-name{font-size:11px;letter-spacing:0.08em;color:var(--text);text-transform:uppercase;font-weight:500;line-height:1}
+.launch-status-text{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;line-height:1}
+.launch-divider{width:1px;height:28px;background:var(--border);margin:0 4px;flex-shrink:0}

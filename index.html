@@ -27,12 +27,15 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--mono);min-hei
 .date-line{font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:4px}
 
 /* ── LAUNCH BAR ── */
-.launch-bar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:10px 0;margin-bottom:16px;border-bottom:1px solid var(--border)}
-.launch-link{display:inline-flex;align-items:center;gap:6px;text-decoration:none;padding:5px 12px;border:1px solid var(--border);border-radius:3px;background:var(--surface);transition:all 0.15s;white-space:nowrap}
+.launch-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:12px 0;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.launch-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;padding:10px 16px;border:1px solid var(--border);border-radius:3px;background:var(--surface);transition:all 0.15s;white-space:nowrap}
 .launch-link:hover{border-color:var(--border-hover);background:var(--surface2)}
+.launch-link.offline{opacity:0.3;cursor:default;pointer-events:none}
 .launch-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.launch-name{font-size:10px;letter-spacing:0.08em;color:var(--text);text-transform:uppercase;font-weight:500}
-.launch-divider{width:1px;height:16px;background:var(--border);margin:0 6px;flex-shrink:0}
+.launch-info{display:flex;flex-direction:column;gap:3px}
+.launch-name{font-size:11px;letter-spacing:0.08em;color:var(--text);text-transform:uppercase;font-weight:500;line-height:1}
+.launch-status{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;line-height:1}
+.launch-divider{width:1px;height:30px;background:var(--border);margin:0 4px;flex-shrink:0}
 
 /* ── REVENUE BAR ── */
 .revenue-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:16px}
@@ -193,10 +196,8 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--mono);min-hei
   </div>
 </header>
 
-<!-- ── LAUNCH BAR ── -->
 <nav class="launch-bar" id="launch-bar"></nav>
 
-<!-- ── REVENUE ── -->
 <div class="revenue-bar">
   <div class="rev-card" title="Double-click to edit">
     <div class="rev-value" id="rev-mrr">$0</div>
@@ -220,7 +221,6 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--mono);min-hei
   </div>
 </div>
 
-<!-- ── TASKS + MISSIONS ── -->
 <div class="main-grid">
   <div>
     <div class="section-label">
@@ -250,13 +250,11 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--mono);min-hei
   </div>
 </div>
 
-<!-- ── PIPELINE ── -->
 <div class="full-width">
   <div class="section-label">Noctive pipeline</div>
   <div class="pipeline" id="pipeline"></div>
 </div>
 
-<!-- ── OUTREACH + BEAT LOG ── -->
 <div class="bottom-grid">
   <div>
     <div class="section-label">
@@ -360,11 +358,19 @@ function renderLaunchBar(){
   TOOL_CATS.forEach((cat,ci)=>{
     if(ci>0){ const d=document.createElement('div'); d.className='launch-divider'; bar.appendChild(d); }
     cat.tools.forEach(t=>{
-      const live=t.status==='live',local=t.status==='local';
+      const live=t.status==='live', local=t.status==='local';
+      const statusLabel = live ? 'Live' : local ? 'Local' : 'Offline';
+      const statusColor = live ? '#22c55e' : local ? '#eab308' : '#3f3f46';
+      const dotColor    = live ? cat.color : local ? '#4b5563' : '#27272a';
       const a=document.createElement('a');
       a.className='launch-link'+(live||local?'':' offline');
       if(t.url){a.href=t.url;a.target='_blank';a.rel='noopener';}
-      a.innerHTML=`<span class="launch-dot" style="background:${live?cat.color:local?'#4b5563':'#27272a'}"></span><span class="launch-name">${t.name}</span>`;
+      a.innerHTML=`
+        <span class="launch-dot" style="background:${dotColor}"></span>
+        <span class="launch-info">
+          <span class="launch-name">${t.name}</span>
+          <span class="launch-status" style="color:${statusColor}">● ${statusLabel}</span>
+        </span>`;
       bar.appendChild(a);
     });
   });
