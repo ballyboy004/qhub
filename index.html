@@ -4,105 +4,184 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Q · HUB</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Inter:wght@900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#060606;--surface:#0d0d0d;--border:#1c1c1c;
+  --bg:#060606;--surface:#0d0d0d;--surface2:#111;--border:#1c1c1c;
   --text:#c8c8c8;--muted:#444;--accent:#c8ff00;
   --accent-dim:rgba(200,255,0,0.08);--red:#ff4444;--green:#44ff88;
-  --blue:#4488ff;--purple:#aa88ff;--orange:#ffaa44;
+  --blue:#4488ff;--purple:#aa88ff;--orange:#ffaa44;--yellow:#facc15;
 }
-html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh;padding:32px 28px 64px;max-width:1100px;margin:0 auto}
+html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh;padding:32px 28px 80px;max-width:1200px;margin:0 auto}
+
+/* ── HEADER ── */
 .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border)}
 .logo{font-size:11px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
-.wordmark{font-size:28px;font-weight:700;color:#fff;letter-spacing:-0.02em}
+.wordmark{font-family:'Inter',sans-serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:-0.02em}
 .wordmark span{color:var(--accent)}
 .clock-block{text-align:right}
 .clock{font-size:28px;font-weight:300;color:#fff;letter-spacing:0.05em;font-variant-numeric:tabular-nums}
 .date{font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-top:4px;text-transform:uppercase}
+
+/* ── SHARED ── */
 .section-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.smart-tasks{margin-bottom:40px}
-.dump-area{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--text);outline:none;resize:none;min-height:72px;line-height:1.6;transition:border-color 0.15s;display:block}
+.qbtn{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:6px;padding:8px 14px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s;white-space:nowrap}
+.qbtn:hover{border-color:#333;color:var(--text)}
+.qbtn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.qbtn.primary:hover{opacity:0.85}
+.qbtn.primary:disabled{opacity:0.4;cursor:not-allowed}
+.qbtn.danger:hover{border-color:var(--red);color:var(--red)}
+.qbtn.sm{font-size:9px;padding:4px 10px;letter-spacing:0.1em}
+.qbtn.recording{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:6px}
+.card:hover{border-color:#252525}
+section{margin-bottom:44px}
+
+/* ── REVENUE BAR ── */
+.revenue-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:44px}
+.rev-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:18px 20px}
+.rev-value{font-family:'Inter',sans-serif;font-size:30px;font-weight:900;letter-spacing:-0.02em;line-height:1;margin-bottom:5px}
+.rev-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.rev-sub{font-size:10px;color:var(--muted);margin-top:3px}
+
+/* ── SMART TASKS ── */
+.dump-area{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--text);outline:none;resize:none;min-height:64px;line-height:1.6;transition:border-color 0.15s;display:block}
 .dump-area:focus{border-color:#333}
 .dump-area::placeholder{color:var(--muted)}
-.dump-row{display:flex;gap:8px;margin-top:8px;margin-bottom:16px;flex-wrap:wrap}
-.dump-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:6px;padding:9px 16px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s;white-space:nowrap}
-.dump-btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
-.dump-btn.primary:hover{opacity:0.85}
-.dump-btn.primary:disabled{opacity:0.4;cursor:not-allowed}
-.dump-btn.recording{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.processing{font-size:11px;color:var(--muted);padding:8px 0;display:none}
+.dump-row{display:flex;gap:8px;margin-top:8px;margin-bottom:14px;flex-wrap:wrap}
+.processing{font-size:11px;color:var(--muted);padding:6px 0;display:none}
 .processing.active{display:block}
 .task-list{display:flex;flex-direction:column;gap:6px}
-.task-item{display:grid;grid-template-columns:12px 1fr auto;align-items:start;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;transition:border-color 0.15s}
+.task-item{display:grid;grid-template-columns:10px 1fr auto;align-items:start;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:11px 14px;transition:border-color 0.15s}
 .task-item:hover{border-color:#2a2a2a}
-.task-item.done-task{opacity:0.4}
+.task-item.done-task{opacity:0.35}
 .task-item.done-task .task-title{text-decoration:line-through}
-.pdot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.pdot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
 .p1{background:var(--red)}.p2{background:var(--orange)}.p3{background:var(--green)}
-.task-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.task-meta{display:flex;align-items:center;gap:8px;margin-bottom:3px}
 .task-cat{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600}
 .task-ts{font-size:9px;color:var(--muted)}
-.task-title{font-size:13px;color:#ddd;line-height:1.5}
-.task-note{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
-.task-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.task-check{background:none;border:1px solid var(--border);border-radius:4px;width:22px;height:22px;cursor:pointer;color:var(--muted);font-size:11px;display:flex;align-items:center;justify-content:center;transition:all 0.12s}
+.task-title{font-size:12px;color:#ddd;line-height:1.5}
+.task-note{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
+.task-actions{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.task-check{background:none;border:1px solid var(--border);border-radius:4px;width:20px;height:20px;cursor:pointer;color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;transition:all 0.12s}
 .task-check:hover{background:var(--accent);color:#000;border-color:var(--accent)}
 .task-item.done-task .task-check{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
-.task-del{background:none;border:none;color:transparent;cursor:pointer;font-size:12px;padding:0;line-height:1;transition:color 0.12s}
+.task-del{background:none;border:none;color:transparent;cursor:pointer;font-size:11px;padding:0;line-height:1;transition:color 0.12s}
 .task-item:hover .task-del{color:var(--muted)}
 .task-del:hover{color:var(--red)!important}
 .tasks-empty{font-size:11px;color:var(--muted);padding:10px 0}
-.missions{margin-bottom:40px}
-.mission-grid{display:flex;flex-direction:column;gap:8px}
-.mission{display:grid;grid-template-columns:80px 1fr 80px 120px;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;transition:border-color 0.15s}
-.mission:hover{border-color:#2a2a2a}
+
+/* ── MISSIONS ── */
+.mission-grid{display:flex;flex-direction:column;gap:7px}
+.mission{display:grid;grid-template-columns:80px 1fr 70px 110px;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:11px 16px;transition:border-color 0.15s}
+.mission:hover{border-color:#252525}
 .mission.done{border-color:var(--accent);background:var(--accent-dim)}
 .mission-tag{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600}
-.mission-label{font-size:13px;color:#ddd}
+.mission-label{font-size:12px;color:#ddd}
 .mission.done .mission-label{color:var(--accent)}
-.mission-count{font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.mission-count{font-size:12px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
 .mission-btns{display:flex;gap:6px;justify-content:flex-end}
-.btn-inc,.btn-dec{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:4px;padding:4px 10px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s}
+.btn-inc,.btn-dec{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:4px;padding:3px 9px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s}
 .btn-inc:hover{background:var(--accent);color:#000;border-color:var(--accent)}
 .btn-dec:hover{background:#1a1a1a;color:var(--text)}
-.bar-row{display:flex;align-items:center;gap:12px;margin-top:10px;margin-bottom:24px}
-.bar-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.bar-row{display:flex;align-items:center;gap:12px;margin-top:10px;margin-bottom:22px}
+.bar-track{flex:1;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
 .bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease}
 .bar-label{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
-.tools{margin-bottom:40px}
-.tool-category{margin-bottom:28px}
+
+/* ── NOCTIVE PIPELINE ── */
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.pipe-col{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px}
+.pipe-col-header{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.pipe-count{font-family:'Inter',sans-serif;font-size:20px;font-weight:900;color:var(--text)}
+.pipe-leads{display:flex;flex-direction:column;gap:5px;min-height:40px}
+.pipe-lead{font-size:10px;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:5px 8px;cursor:pointer;transition:border-color 0.12s;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.pipe-lead:hover{border-color:#333}
+.pipe-lead span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pipe-lead-del{background:none;border:none;color:transparent;cursor:pointer;font-size:11px;flex-shrink:0;transition:color 0.12s}
+.pipe-lead:hover .pipe-lead-del{color:var(--muted)}
+.pipe-lead-del:hover{color:var(--red)!important}
+.pipe-add-row{display:flex;gap:6px;margin-top:8px}
+.pipe-input{font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:5px 8px;color:var(--text);outline:none;flex:1;min-width:0}
+.pipe-input::placeholder{color:var(--muted)}
+.pipe-input:focus{border-color:#333}
+.pipe-add-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.12s;flex-shrink:0}
+.pipe-add-btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+
+/* ── TIKTOK OUTREACH ── */
+.outreach-grid{display:flex;flex-direction:column;gap:6px}
+.outreach-item{display:grid;grid-template-columns:1fr 90px 90px 90px auto;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;transition:border-color 0.15s}
+.outreach-item:hover{border-color:#2a2a2a}
+.outreach-handle{font-size:12px;color:var(--text)}
+.outreach-price{font-size:11px;color:var(--muted)}
+.outreach-status{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px;text-align:center}
+.status-waiting{background:rgba(255,170,68,0.12);color:var(--orange)}
+.status-quoted{background:rgba(68,136,255,0.12);color:var(--blue)}
+.status-sent{background:rgba(170,136,255,0.12);color:var(--purple)}
+.status-posted{background:rgba(68,255,136,0.12);color:var(--green)}
+.status-pass{background:rgba(255,68,68,0.08);color:var(--muted)}
+.outreach-date{font-size:9px;color:var(--muted)}
+.outreach-del{background:none;border:none;color:transparent;cursor:pointer;font-size:11px;padding:0;transition:color 0.12s}
+.outreach-item:hover .outreach-del{color:var(--muted)}
+.outreach-del:hover{color:var(--red)!important}
+.outreach-add-row{display:grid;grid-template-columns:1fr 100px 120px auto;gap:8px;margin-top:10px}
+.outreach-input{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);outline:none;transition:border-color 0.15s}
+.outreach-input:focus{border-color:#333}
+.outreach-input::placeholder{color:var(--muted)}
+.outreach-select{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);outline:none;cursor:pointer}
+.outreach-select option{background:var(--bg)}
+
+/* ── BEAT LOG ── */
+.beat-grid{display:flex;flex-direction:column;gap:6px}
+.beat-item{display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;transition:border-color 0.15s}
+.beat-item:hover{border-color:#2a2a2a}
+.beat-date{font-size:9px;color:var(--muted);white-space:nowrap}
+.beat-name{font-size:12px;color:var(--text)}
+.beat-vibe{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:rgba(170,136,255,0.1);color:var(--purple)}
+.beat-sent{font-size:9px;color:var(--green)}
+.beat-del{background:none;border:none;color:transparent;cursor:pointer;font-size:11px;padding:0;transition:color 0.12s}
+.beat-item:hover .beat-del{color:var(--muted)}
+.beat-del:hover{color:var(--red)!important}
+.beat-add-row{display:grid;grid-template-columns:1fr 120px 140px auto;gap:8px;margin-top:10px}
+
+/* ── TOOLS ── */
+.tool-category{margin-bottom:24px}
 .tool-category-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
-.tool-card{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px 18px;transition:all 0.15s;cursor:pointer;position:relative;overflow:hidden}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.tool-card{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px 16px;transition:all 0.15s;position:relative;overflow:hidden}
 .tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,var(--accent));opacity:0;transition:opacity 0.15s}
 .tool-card:hover{border-color:#333;transform:translateY(-1px)}
 .tool-card:hover::before{opacity:1}
 .tool-card.offline{opacity:0.4;cursor:default}
 .tool-card.offline:hover{transform:none;border-color:var(--border)}
 .tool-card.offline::before{display:none}
-.tool-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:4px}
-.tool-desc{font-size:11px;color:var(--muted);line-height:1.5}
-.tool-status{margin-top:10px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green)}
-.tool-status.local{color:#ffcc00}
-.tool-status.offline-s{color:var(--muted)}
+.tool-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:3px}
+.tool-desc{font-size:10px;color:var(--muted);line-height:1.5}
+.tool-status{margin-top:9px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green)}
+.tool-status.local{color:var(--yellow)}
+.tool-status.off{color:var(--muted)}
+
+/* ── FOOTER ── */
 .footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border)}
-.footer-text{font-size:10px;color:#2a2a2a;letter-spacing:0.15em;text-transform:uppercase}
-.reset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;background:none;border:none;color:#2a2a2a;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
+.footer-text{font-size:10px;color:#222;letter-spacing:0.15em;text-transform:uppercase}
+.reset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;background:none;border:none;color:#222;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.15s}
 .reset-btn:hover{color:var(--red)}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.header{animation:fadeUp 0.4s ease both}
-.smart-tasks{animation:fadeUp 0.4s ease 0.03s both}
-.missions{animation:fadeUp 0.4s ease 0.06s both}
-.tools{animation:fadeUp 0.4s ease 0.09s both}
-@media(max-width:600px){
-  html,body{padding:20px 16px 40px}
+header{animation:fadeUp 0.35s ease both}
+section{animation:fadeUp 0.35s ease both}
+
+@media(max-width:700px){
+  html,body{padding:20px 16px 60px}
+  .pipeline{grid-template-columns:repeat(2,1fr)}
   .mission{grid-template-columns:60px 1fr;grid-template-rows:auto auto}
   .mission-count{display:none}
+  .revenue-bar{grid-template-columns:repeat(2,1fr)}
+  .outreach-grid{display:none}
   .clock{font-size:20px}
-  .wordmark{font-size:22px}
 }
 </style>
 </head>
@@ -119,31 +198,102 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
   </div>
 </header>
 
-<section class="smart-tasks">
+<!-- ── REVENUE ── -->
+<div class="revenue-bar">
+  <div class="rev-card">
+    <div class="rev-value" id="rev-mrr" style="color:var(--accent)">$0</div>
+    <div class="rev-label">Noctive MRR</div>
+    <div class="rev-sub" id="rev-clients">0 clients</div>
+  </div>
+  <div class="rev-card">
+    <div class="rev-value" id="rev-beats" style="color:var(--purple)">$0</div>
+    <div class="rev-label">Beat Sales</div>
+    <div class="rev-sub" id="rev-beats-count">0 sales</div>
+  </div>
+  <div class="rev-card">
+    <div class="rev-value" id="rev-other" style="color:var(--blue)">$0</div>
+    <div class="rev-label">Other Income</div>
+    <div class="rev-sub">one-time / misc</div>
+  </div>
+  <div class="rev-card">
+    <div class="rev-value" id="rev-total" style="color:#fff">$0</div>
+    <div class="rev-label">Total This Month</div>
+    <div class="rev-sub" id="rev-goal">Goal: $497 (1 client)</div>
+  </div>
+</div>
+
+<!-- ── SMART TASKS ── -->
+<section>
   <div class="section-label">
     <span>Smart tasks</span>
-    <button class="dump-btn" onclick="manualSync()" style="font-size:9px;padding:4px 10px;letter-spacing:0.1em" id="sync-btn">↻ Sync</button>
+    <div style="display:flex;gap:6px">
+      <button class="qbtn sm" id="sync-btn" onclick="manualSync()">↻ Sync</button>
+      <button class="qbtn sm danger" onclick="clearDone()">Clear done</button>
+    </div>
   </div>
-  <textarea class="dump-area" id="dump-area" placeholder="Dump your thoughts — voice note, random ideas, things you need to do. Claude turns it into prioritized tasks."></textarea>
+  <textarea class="dump-area" id="dump-area" placeholder="Dump your thoughts — voice note, ideas, things to do. Claude turns it into prioritized tasks."></textarea>
   <div class="dump-row">
-    <button class="dump-btn" id="voice-btn" onclick="toggleVoice()">🎙 Voice</button>
-    <button class="dump-btn primary" id="process-btn" onclick="processDump()">⚡ Process into tasks</button>
-    <button class="dump-btn" onclick="clearDone()" style="margin-left:auto">Clear done</button>
+    <button class="qbtn" id="voice-btn" onclick="toggleVoice()">🎙 Voice</button>
+    <button class="qbtn primary" id="process-btn" onclick="processDump()">⚡ Process into tasks</button>
   </div>
-  <div class="processing" id="proc-ind">⚡ Processing your thoughts...</div>
+  <div class="processing" id="proc-ind">⚡ Processing...</div>
   <div class="task-list" id="task-list"></div>
 </section>
 
-<section class="missions">
+<!-- ── MISSIONS ── -->
+<section>
   <div class="section-label">Daily missions</div>
   <div class="bar-row">
     <div class="bar-track"><div class="bar-fill" id="main-bar" style="width:0%"></div></div>
-    <div class="bar-label" id="main-label">0 / 5 complete</div>
+    <div class="bar-label" id="main-label">0 / 5</div>
   </div>
   <div class="mission-grid" id="mission-grid"></div>
 </section>
 
-<section class="tools">
+<!-- ── NOCTIVE PIPELINE ── -->
+<section>
+  <div class="section-label"><span>Noctive pipeline</span></div>
+  <div class="pipeline" id="pipeline"></div>
+</section>
+
+<!-- ── TIKTOK OUTREACH ── -->
+<section>
+  <div class="section-label">
+    <span>TikTok outreach</span>
+    <span id="outreach-stats" style="font-size:10px;color:var(--muted)"></span>
+  </div>
+  <div class="outreach-grid" id="outreach-grid"></div>
+  <div class="outreach-add-row" style="margin-top:10px">
+    <input class="outreach-input" id="out-handle" placeholder="@handle" />
+    <input class="outreach-input" id="out-price" placeholder="Price (e.g. $50)" />
+    <select class="outreach-select" id="out-status">
+      <option value="waiting">Waiting</option>
+      <option value="quoted">Quoted</option>
+      <option value="sent">Beat Sent</option>
+      <option value="posted">Posted ✓</option>
+      <option value="pass">Pass</option>
+    </select>
+    <button class="qbtn primary" onclick="addOutreach()">+ Add</button>
+  </div>
+</section>
+
+<!-- ── BEAT LOG ── -->
+<section>
+  <div class="section-label">
+    <span>Beat log</span>
+    <span id="beat-stats" style="font-size:10px;color:var(--muted)"></span>
+  </div>
+  <div class="beat-grid" id="beat-grid"></div>
+  <div class="beat-add-row" style="margin-top:10px">
+    <input class="outreach-input" id="beat-name" placeholder="Beat name / vibe" />
+    <input class="outreach-input" id="beat-vibe" placeholder="Genre (dark r&b, trap...)" />
+    <input class="outreach-input" id="beat-sent" placeholder="Sent to (optional)" />
+    <button class="qbtn primary" onclick="addBeat()">+ Log</button>
+  </div>
+</section>
+
+<!-- ── TOOLS ── -->
+<section>
   <div class="section-label">Tools</div>
   <div id="tools-container"></div>
 </section>
@@ -154,6 +304,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',mon
 </footer>
 
 <script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
 const SECRET = 'qhub-samuel-2026-noctive';
 
 const MISSIONS = [
@@ -164,17 +315,23 @@ const MISSIONS = [
   {id:'promo',   tag:'Promo',   label:'Hit 5 influencers for promo', goal:5, color:'#ff44aa'},
 ];
 
+const PIPE_STAGES = [
+  {id:'emailed', label:'Emailed',  color:'#4488ff'},
+  {id:'opened',  label:'Opened',   color:'#ffcc00'},
+  {id:'replied', label:'Replied',  color:'#aa88ff'},
+  {id:'demo',    label:'Demo',     color:'#ffaa44'},
+  {id:'closed',  label:'Closed ✓', color:'#44ff88'},
+];
+
 const TOOL_CATS = [
   { label:'Noctive — outreach', color:'#4488ff', tools:[
-    {name:'Lead Engine',     desc:'Qualify → Generate → Export', url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
-    {name:'Instantly',       desc:'Email campaign dashboard',    url:'https://app.instantly.ai', status:'live'},
-    {name:'Noctive Site',    desc:'noctive.io — live',           url:'https://noctive.io', status:'live'},
+    {name:'Lead Engine',     desc:'Generate + push to Instantly', url:'https://noctive-lead-engine-dztnw3c87n2iz5tyse52aw.streamlit.app/', status:'live'},
+    {name:'Instantly',       desc:'Email campaign dashboard',     url:'https://app.instantly.ai', status:'live'},
+    {name:'Noctive Site',    desc:'noctive.io',                   url:'https://noctive.io', status:'live'},
   ]},
   { label:'Music — network', color:'#44ff88', tools:[
-    {name:'Network Finder', desc:'Producer credits + IG links', url:'https://blkbox-network.vercel.app/', status:'live'},
-  ]},
-  { label:'Promo — growth', color:'#ff44aa', tools:[
-    {name:'Influencer Scout', desc:'TikTok creators by hashtag', url:'https://blkbx-influencer-scout-90osf6fud.vercel.app/', status:'live'},
+    {name:'Network Finder',   desc:'Producer credits + IG links', url:'https://blkbox-network.vercel.app/', status:'live'},
+    {name:'Influencer Scout', desc:'TikTok creators by hashtag',  url:'https://blkbx-influencer-scout-90osf6fud.vercel.app/', status:'live'},
   ]},
   { label:'Income — jobs', color:'#ffcc00', tools:[
     {name:'Job Scout', desc:'Temecula jobs · run locally', url:'http://localhost:8000', status:'local'},
@@ -186,7 +343,14 @@ const CAT_COLORS = {
   Network:'#44ff88',Promo:'#ff44aa',BLACKBOX:'#c8ff00',Life:'#c8c8c8',General:'#666',
 };
 
-const DAY_KEY='qhub_v1', TASKS_KEY='qhub_tasks_v2';
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+const DAY_KEY       = 'qhub_v1';
+const TASKS_KEY     = 'qhub_tasks_v2';
+const PIPE_KEY      = 'qhub_pipeline';
+const OUTREACH_KEY  = 'qhub_outreach';
+const BEATS_KEY     = 'qhub_beats';
+const REVENUE_KEY   = 'qhub_revenue';
+
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function loadState(){
   try{ const s=JSON.parse(localStorage.getItem(DAY_KEY)||'{}'); if(s.date===todayStr()) return s.counts||{}; }catch(e){}
@@ -194,11 +358,54 @@ function loadState(){
 }
 function saveState(c){ localStorage.setItem(DAY_KEY,JSON.stringify({date:todayStr(),counts:c})); }
 let counts=loadState();
-function loadTasks(){ try{ return JSON.parse(localStorage.getItem(TASKS_KEY)||'[]'); }catch(e){ return []; } }
-function saveTasks(t){ localStorage.setItem(TASKS_KEY,JSON.stringify(t)); }
-let tasks=loadTasks();
+
+function load(key,def){ try{ return JSON.parse(localStorage.getItem(key)||'null')||def; }catch(e){ return def; } }
+function save(key,val){ localStorage.setItem(key,JSON.stringify(val)); }
+
+let tasks    = load(TASKS_KEY, []);
+let pipeline = load(PIPE_KEY, {emailed:[],opened:[],replied:[],demo:[],closed:[]});
+let outreach = load(OUTREACH_KEY, []);
+let beats    = load(BEATS_KEY, []);
+let revenue  = load(REVENUE_KEY, {mrr:0, clients:0, beatSales:0, beatCount:0, other:0});
 
 function authH(){ return {'Content-Type':'application/json','x-qhub-token':SECRET}; }
+
+// ── REVENUE ───────────────────────────────────────────────────────────────────
+function renderRevenue(){
+  const total = revenue.mrr + revenue.beatSales + revenue.other;
+  document.getElementById('rev-mrr').textContent     = '$'+revenue.mrr.toLocaleString();
+  document.getElementById('rev-clients').textContent  = revenue.clients+' client'+(revenue.clients!==1?'s':'');
+  document.getElementById('rev-beats').textContent    = '$'+revenue.beatSales.toLocaleString();
+  document.getElementById('rev-beats-count').textContent = revenue.beatCount+' sale'+(revenue.beatCount!==1?'s':'');
+  document.getElementById('rev-other').textContent    = '$'+revenue.other.toLocaleString();
+  document.getElementById('rev-total').textContent    = '$'+total.toLocaleString();
+  const nextGoal = revenue.clients===0?'Goal: $497 (1 client)':'Goal: $'+(497*(revenue.clients+1)).toLocaleString()+' ('+(revenue.clients+1)+' clients)';
+  document.getElementById('rev-goal').textContent     = nextGoal;
+}
+
+// Double-click any revenue card to edit
+document.querySelectorAll('.rev-card').forEach((card,i)=>{
+  card.style.cursor='pointer';
+  card.title='Click to edit';
+  card.addEventListener('dblclick',()=>{
+    const fields=['mrr+clients','beatSales+beatCount','other'];
+    if(i===0){
+      const v=prompt('Monthly Recurring Revenue ($):',revenue.mrr);
+      const c=prompt('Number of clients:',revenue.clients);
+      if(v!==null) revenue.mrr=parseInt(v)||0;
+      if(c!==null) revenue.clients=parseInt(c)||0;
+    } else if(i===1){
+      const v=prompt('Beat sales total ($):',revenue.beatSales);
+      const c=prompt('Number of sales:',revenue.beatCount);
+      if(v!==null) revenue.beatSales=parseInt(v)||0;
+      if(c!==null) revenue.beatCount=parseInt(c)||0;
+    } else if(i===2){
+      const v=prompt('Other income ($):',revenue.other);
+      if(v!==null) revenue.other=parseInt(v)||0;
+    }
+    save(REVENUE_KEY,revenue); renderRevenue();
+  });
+});
 
 // ── VOICE ─────────────────────────────────────────────────────────────────────
 let recognition=null, isRecording=false;
@@ -219,7 +426,7 @@ function toggleVoice(){
   recognition.start();
 }
 
-// ── PROCESS ───────────────────────────────────────────────────────────────────
+// ── PROCESS DUMP ──────────────────────────────────────────────────────────────
 async function processDump(){
   const raw=document.getElementById('dump-area').value.trim();
   if(!raw){ alert('Nothing to process.'); return; }
@@ -228,32 +435,27 @@ async function processDump(){
   btn.disabled=true; ind.classList.add('active');
   try {
     const res=await fetch('/api/voice',{method:'POST',headers:authH(),body:JSON.stringify({text:raw})});
-    if(!res.ok) throw new Error(`Server error ${res.status}`);
+    if(!res.ok) throw new Error('Server error '+res.status);
     const data=await res.json();
     if(!data.ok) throw new Error(data.error||'Unknown error');
     await syncFromServer();
     document.getElementById('dump-area').value='';
-  } catch(e){
-    alert('Error: '+e.message); console.error(e);
-  } finally {
-    btn.disabled=false; ind.classList.remove('active');
-  }
+  } catch(e){ alert('Error: '+e.message); }
+  finally{ btn.disabled=false; ind.classList.remove('active'); }
 }
 
-// ── SYNC ──────────────────────────────────────────────────────────────────────
+// ── SERVER SYNC ───────────────────────────────────────────────────────────────
 async function syncFromServer(){
   try {
     const res=await fetch('/api/tasks',{headers:authH()});
     if(!res.ok) return;
-    const serverTasks=await res.json();
-    if(!Array.isArray(serverTasks)) return;
-    const serverIds=new Set(serverTasks.map(t=>t.id));
-    const localOnly=tasks.filter(t=>!serverIds.has(t.id));
-    tasks=[...serverTasks,...localOnly];
-    saveTasks(tasks); renderTasks();
-  } catch(e){ console.error('sync error',e); }
+    const st=await res.json();
+    if(!Array.isArray(st)) return;
+    const sids=new Set(st.map(t=>t.id));
+    tasks=[...st,...tasks.filter(t=>!sids.has(t.id))];
+    save(TASKS_KEY,tasks); renderTasks();
+  } catch(e){}
 }
-
 async function manualSync(){
   const btn=document.getElementById('sync-btn');
   btn.textContent='↻ Syncing...';
@@ -261,7 +463,7 @@ async function manualSync(){
   btn.textContent='↻ Sync';
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
+// ── TASKS ─────────────────────────────────────────────────────────────────────
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function renderTasks(){
@@ -288,15 +490,15 @@ function renderTasks(){
 
 async function toggleTask(id){
   const t=tasks.find(x=>x.id===id); if(!t) return;
-  t.done=!t.done; saveTasks(tasks); renderTasks();
+  t.done=!t.done; save(TASKS_KEY,tasks); renderTasks();
   try{ await fetch('/api/tasks',{method:'PATCH',headers:authH(),body:JSON.stringify({id,done:t.done})}); }catch(e){}
 }
 async function deleteTask(id){
-  tasks=tasks.filter(x=>x.id!==id); saveTasks(tasks); renderTasks();
+  tasks=tasks.filter(x=>x.id!==id); save(TASKS_KEY,tasks); renderTasks();
   try{ await fetch(`/api/tasks?id=${id}`,{method:'DELETE',headers:authH()}); }catch(e){}
 }
 async function clearDone(){
-  tasks=tasks.filter(t=>!t.done); saveTasks(tasks); renderTasks();
+  tasks=tasks.filter(t=>!t.done); save(TASKS_KEY,tasks); renderTasks();
   try{ await fetch('/api/tasks',{method:'DELETE',headers:authH()}); }catch(e){}
 }
 
@@ -322,7 +524,136 @@ function renderMissions(){
     grid.appendChild(div);
   });
   document.getElementById('main-bar').style.width=Math.round(done/MISSIONS.length*100)+'%';
-  document.getElementById('main-label').textContent=done+' / '+MISSIONS.length+' complete';
+  document.getElementById('main-label').textContent=done+' / '+MISSIONS.length;
+}
+
+// ── PIPELINE ──────────────────────────────────────────────────────────────────
+function renderPipeline(){
+  const container=document.getElementById('pipeline');
+  container.innerHTML='';
+  PIPE_STAGES.forEach(stage=>{
+    const leads=pipeline[stage.id]||[];
+    const col=document.createElement('div');
+    col.className='pipe-col';
+    col.innerHTML=`
+      <div class="pipe-col-header">
+        <span style="color:${stage.color}">${stage.label}</span>
+        <span class="pipe-count" style="color:${stage.color}">${leads.length}</span>
+      </div>
+      <div class="pipe-leads" id="pipe-${stage.id}">
+        ${leads.map((l,i)=>`
+          <div class="pipe-lead">
+            <span>${esc(l)}</span>
+            <button class="pipe-lead-del" onclick="removeLead('${stage.id}',${i})">×</button>
+          </div>`).join('')}
+      </div>
+      <div class="pipe-add-row">
+        <input class="pipe-input" id="pipe-input-${stage.id}" placeholder="Company name" onkeydown="if(event.key==='Enter')addLead('${stage.id}')" />
+        <button class="pipe-add-btn" onclick="addLead('${stage.id}')">+</button>
+      </div>`;
+    container.appendChild(col);
+  });
+}
+
+function addLead(stageId){
+  const input=document.getElementById('pipe-input-'+stageId);
+  const val=input.value.trim(); if(!val) return;
+  pipeline[stageId]=[...(pipeline[stageId]||[]),val];
+  input.value='';
+  save(PIPE_KEY,pipeline); renderPipeline();
+}
+function removeLead(stageId,idx){
+  pipeline[stageId]=(pipeline[stageId]||[]).filter((_,i)=>i!==idx);
+  save(PIPE_KEY,pipeline); renderPipeline();
+}
+
+// ── OUTREACH ──────────────────────────────────────────────────────────────────
+function renderOutreach(){
+  const grid=document.getElementById('outreach-grid');
+  const stats=document.getElementById('outreach-stats');
+  const posted=outreach.filter(o=>o.status==='posted').length;
+  stats.textContent=outreach.length+' pages · '+posted+' posted';
+
+  if(!outreach.length){ grid.innerHTML='<div class="tasks-empty">No outreach logged yet.</div>'; return; }
+
+  const statusMap={
+    waiting:'Waiting',quoted:'Quoted',sent:'Beat Sent',posted:'Posted ✓',pass:'Pass'
+  };
+  grid.innerHTML=outreach.map((o,i)=>`
+    <div class="outreach-item">
+      <div class="outreach-handle">${esc(o.handle)}</div>
+      <div class="outreach-price">${esc(o.price||'—')}</div>
+      <div>
+        <select class="outreach-select" style="font-size:9px;padding:3px 6px" onchange="updateOutreachStatus(${i},this.value)">
+          ${['waiting','quoted','sent','posted','pass'].map(s=>`<option value="${s}"${o.status===s?' selected':''}>${statusMap[s]}</option>`).join('')}
+        </select>
+      </div>
+      <div class="outreach-date">${o.date}</div>
+      <button class="outreach-del" onclick="deleteOutreach(${i})">×</button>
+    </div>`).join('');
+}
+
+function addOutreach(){
+  const handle=document.getElementById('out-handle').value.trim();
+  if(!handle) return;
+  const price=document.getElementById('out-price').value.trim();
+  const status=document.getElementById('out-status').value;
+  const now=new Date();
+  outreach.unshift({
+    handle, price, status,
+    date: now.toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+  });
+  document.getElementById('out-handle').value='';
+  document.getElementById('out-price').value='';
+  save(OUTREACH_KEY,outreach); renderOutreach();
+}
+function updateOutreachStatus(i,status){
+  outreach[i].status=status;
+  save(OUTREACH_KEY,outreach); renderOutreach();
+}
+function deleteOutreach(i){
+  outreach.splice(i,1);
+  save(OUTREACH_KEY,outreach); renderOutreach();
+}
+
+// ── BEAT LOG ──────────────────────────────────────────────────────────────────
+function renderBeats(){
+  const grid=document.getElementById('beat-grid');
+  const stats=document.getElementById('beat-stats');
+  stats.textContent=beats.length+' beat'+(beats.length!==1?'s':'')+' logged';
+
+  if(!beats.length){ grid.innerHTML='<div class="tasks-empty">No beats logged yet. Make one tonight.</div>'; return; }
+
+  grid.innerHTML=beats.map((b,i)=>`
+    <div class="beat-item">
+      <div class="beat-date">${b.date}</div>
+      <div class="beat-name">${esc(b.name)}</div>
+      <div class="beat-vibe">${esc(b.vibe)}</div>
+      <div class="beat-sent">${b.sent?'→ '+esc(b.sent):''}</div>
+      <button class="beat-del" onclick="deleteBeat(${i})">×</button>
+    </div>`).join('');
+}
+
+function addBeat(){
+  const name=document.getElementById('beat-name').value.trim();
+  if(!name) return;
+  const vibe=document.getElementById('beat-vibe').value.trim()||'beat';
+  const sent=document.getElementById('beat-sent').value.trim();
+  const now=new Date();
+  beats.unshift({
+    name, vibe, sent,
+    date: now.toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+  });
+  document.getElementById('beat-name').value='';
+  document.getElementById('beat-vibe').value='';
+  document.getElementById('beat-sent').value='';
+  save(BEATS_KEY,beats); renderBeats();
+  // auto-tick the beat mission
+  if((counts['beat']||0)<1){ counts['beat']=1; saveState(counts); renderMissions(); }
+}
+function deleteBeat(i){
+  beats.splice(i,1);
+  save(BEATS_KEY,beats); renderBeats();
 }
 
 // ── TOOLS ─────────────────────────────────────────────────────────────────────
@@ -340,7 +671,7 @@ function renderTools(){
       el.style.setProperty('--card-accent',cat.color);
       if(t.url){el.href=t.url;el.target='_blank';el.rel='noopener';}
       el.innerHTML=`<div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div>
-        <div class="tool-status ${live?'':local?'local':'offline-s'}">${live?'● Live':local?'◐ Local':'○ Offline'}</div>`;
+        <div class="tool-status ${live?'':local?'local':'off'}">${live?'● Live':local?'◐ Local':'○ Offline'}</div>`;
       grid.appendChild(el);
     });
     sec.appendChild(grid); c.appendChild(sec);
@@ -362,13 +693,17 @@ function updateClock(){
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
+renderRevenue();
 renderTasks();
 renderMissions();
+renderPipeline();
+renderOutreach();
+renderBeats();
 renderTools();
 updateClock();
 setInterval(updateClock,1000);
-syncFromServer();             // sync immediately on load
-setInterval(syncFromServer,5000); // then every 5 seconds
+syncFromServer();
+setInterval(syncFromServer,5000);
 </script>
 </body>
 </html>
