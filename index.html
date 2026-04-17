@@ -19,7 +19,7 @@
 html,body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;padding:32px 40px 80px;max-width:1400px;margin:0 auto;-webkit-font-smoothing:antialiased}
 
 /* ── HEADER ── */
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:18px;}
 .header-left .eyebrow{font-size:10px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
 .header-left .wordmark{font-family:var(--inter);font-size:22px;font-weight:900;letter-spacing:-0.02em;color:var(--text)}
 .clock-block{text-align:right}
@@ -27,7 +27,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--mono);min-hei
 .date-line{font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:4px}
 
 /* ── LAUNCH BAR ── */
-.launch-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:12px 0;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.launch-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:16px;}
 .launch-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;padding:10px 16px;border:1px solid var(--border);border-radius:3px;background:var(--surface);transition:all 0.15s;white-space:nowrap}
 .launch-link:hover{border-color:var(--border-hover);background:var(--surface2)}
 .launch-link.offline{opacity:0.3;cursor:default;pointer-events:none}
@@ -351,7 +351,6 @@ let revenue  = load(REVENUE_KEY,{mrr:0,clients:0,beatSales:0,beatCount:0,other:0
 
 function authH(){ return {'Content-Type':'application/json','x-qhub-token':SECRET}; }
 
-// ── LAUNCH BAR ────────────────────────────────────────────────────────────────
 function renderLaunchBar(){
   const bar=document.getElementById('launch-bar');
   bar.innerHTML='';
@@ -376,7 +375,6 @@ function renderLaunchBar(){
   });
 }
 
-// ── REVENUE ───────────────────────────────────────────────────────────────────
 function renderRevenue(){
   const total=revenue.mrr+revenue.beatSales+revenue.other;
   document.getElementById('rev-mrr').textContent    ='$'+revenue.mrr.toLocaleString();
@@ -396,7 +394,6 @@ document.querySelectorAll('.rev-card').forEach((card,i)=>{
   });
 });
 
-// ── VOICE ─────────────────────────────────────────────────────────────────────
 let recognition=null,isRecording=false;
 function toggleVoice(){
   const btn=document.getElementById('voice-btn');
@@ -411,7 +408,6 @@ function toggleVoice(){
   recognition.start();
 }
 
-// ── PROCESS ───────────────────────────────────────────────────────────────────
 async function processDump(){
   const raw=document.getElementById('dump-area').value.trim();
   if(!raw){alert('Nothing to process.');return;}
@@ -428,7 +424,6 @@ async function processDump(){
   finally{btn.disabled=false;ind.classList.remove('active');}
 }
 
-// ── SYNC ──────────────────────────────────────────────────────────────────────
 async function syncFromServer(){
   try{
     const res=await fetch('/api/tasks',{headers:authH()});
@@ -447,7 +442,6 @@ async function manualSync(){
   btn.textContent='↻ Sync';
 }
 
-// ── TASKS ─────────────────────────────────────────────────────────────────────
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function renderTasks(){
   const list=document.getElementById('task-list');
@@ -484,7 +478,6 @@ async function clearDone(){
   try{await fetch('/api/tasks',{method:'DELETE',headers:authH()});}catch(e){}
 }
 
-// ── MISSIONS ──────────────────────────────────────────────────────────────────
 function renderMissions(){
   const grid=document.getElementById('mission-grid');
   grid.innerHTML='';let done=0;
@@ -509,7 +502,6 @@ function renderMissions(){
   document.getElementById('main-label').textContent=done+' / '+MISSIONS.length;
 }
 
-// ── PIPELINE ──────────────────────────────────────────────────────────────────
 function renderPipeline(){
   const container=document.getElementById('pipeline');
   container.innerHTML='';
@@ -535,7 +527,6 @@ function renderPipeline(){
 function addLead(s){const i=document.getElementById('pipe-input-'+s);const v=i.value.trim();if(!v)return;pipeline[s]=[...(pipeline[s]||[]),v];i.value='';save(PIPE_KEY,pipeline);renderPipeline();}
 function removeLead(s,idx){pipeline[s]=(pipeline[s]||[]).filter((_,i)=>i!==idx);save(PIPE_KEY,pipeline);renderPipeline();}
 
-// ── OUTREACH ──────────────────────────────────────────────────────────────────
 function renderOutreach(){
   const grid=document.getElementById('outreach-grid');
   const stats=document.getElementById('outreach-stats');
@@ -563,7 +554,6 @@ function addOutreach(){
 function updateOutreachStatus(i,s){outreach[i].status=s;save(OUTREACH_KEY,outreach);renderOutreach();}
 function deleteOutreach(i){outreach.splice(i,1);save(OUTREACH_KEY,outreach);renderOutreach();}
 
-// ── BEAT LOG ──────────────────────────────────────────────────────────────────
 function renderBeats(){
   const grid=document.getElementById('beat-grid');
   document.getElementById('beat-stats').textContent=beats.length+' beat'+(beats.length!==1?'s':'')+' logged';
@@ -589,7 +579,6 @@ function inc(id){const m=MISSIONS.find(x=>x.id===id);if((counts[id]||0)<m.goal){
 function dec(id){if((counts[id]||0)>0){counts[id]--;saveState(counts);renderMissions();}}
 function resetDay(){if(!confirm("Reset today's progress?"))return;counts={};saveState(counts);renderMissions();}
 
-// ── CLOCK ─────────────────────────────────────────────────────────────────────
 function updateClock(){
   const now=new Date();
   document.getElementById('clock').textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
@@ -599,7 +588,6 @@ function updateClock(){
   localStorage.setItem('qhub_lastdate',today);
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
 renderLaunchBar();
 renderRevenue();
 renderTasks();

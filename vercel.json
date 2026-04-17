@@ -1,1 +1,7 @@
-{}
+{
+  "rewrites": [
+    { "source": "/api/voice", "destination": "/api/voice" },
+    { "source": "/api/tasks", "destination": "/api/tasks" },
+    { "source": "/api/mac",   "destination": "/api/mac"   }
+  ]
+}
