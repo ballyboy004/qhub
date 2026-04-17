@@ -1,7 +1,6 @@
-// QHUB Local Server
-// Run with: npm run dev
-// Handles all API routes locally so osascript (Mac control) actually works.
-// The Vercel deploy handles voice/tasks via Redis — this layer adds Mac automation on top.
+// QHUB Local Server v2
+// Auto-started via LaunchAgent — no terminal window needed
+// Handles Mac automation, mode state, and proxies voice/tasks to Vercel+Redis
 
 const http = require('http');
 const fs   = require('fs');
@@ -10,11 +9,14 @@ const { exec } = require('child_process');
 const { promisify } = require('util');
 
 const execAsync = promisify(exec);
-
 try { require('dotenv').config({ path: path.join(__dirname, '.env.local') }); } catch(e) {}
 
 const PORT   = process.env.PORT || 3000;
 const SECRET = process.env.QHUB_SECRET || 'qhub-samuel-2026-noctive';
+
+// In-memory mode state — dashboard polls this to stay in sync
+// when modes are triggered externally (shell scripts, Focus automations)
+let currentMode = 'none';
 
 const MODE_SCRIPTS = {
   noctive: {
@@ -55,8 +57,6 @@ end try`
   },
   blkbox: {
     label: 'BLKBOX Mode',
-    // blkbx alias: attaches to tmux session 'blackbox', or creates it
-    // then opens Chrome with Vercel + Supabase
     script: `tell application "Terminal"
   activate
   do script "source ~/.zshrc && blkbx"
@@ -85,7 +85,11 @@ function parseBody(req) {
 }
 
 function sendJSON(res, status, data) {
-  res.writeHead(status, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.writeHead(status, {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*'
+  });
   res.end(JSON.stringify(data));
 }
 
@@ -102,36 +106,63 @@ async function proxyToVercel(req, body) {
 
 const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') {
-    res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*', 'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE' });
+    res.writeHead(204, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE'
+    });
     return res.end();
   }
 
   const url = req.url.split('?')[0];
 
+  // ── Serve dashboard ──────────────────────────────────────────────────────
   if (url === '/' || url === '/index.html') {
     const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
     res.writeHead(200, { 'Content-Type': 'text/html' });
     return res.end(html);
   }
 
+  // ── Mode state — GET returns current mode, POST sets it ──────────────────
+  // Shell scripts (triggered by Focus automations or shortcuts) POST here
+  // Dashboard polls GET /api/mode every 2s to stay in sync
+  if (url === '/api/mode') {
+    if (req.method === 'GET') {
+      return sendJSON(res, 200, { mode: currentMode });
+    }
+    if (req.method === 'POST') {
+      if (req.headers['x-qhub-token'] !== SECRET) return sendJSON(res, 401, { error: 'Unauthorized' });
+      const body = await parseBody(req);
+      const newMode = body.mode || 'none';
+      const prev = currentMode;
+      currentMode = newMode;
+      console.log(`[mode] ${prev} → ${newMode}`);
+      return sendJSON(res, 200, { ok: true, mode: currentMode });
+    }
+  }
+
+  // ── Mac launcher — called from dashboard buttons ──────────────────────────
   if (url === '/api/mac' && req.method === 'POST') {
     if (req.headers['x-qhub-token'] !== SECRET) return sendJSON(res, 401, { error: 'Unauthorized' });
     const body = await parseBody(req);
-    const cfg = MODE_SCRIPTS[body.mode];
-    if (!cfg) return sendJSON(res, 400, { error: 'Unknown mode' });
+    const mode = body.mode || body.script; // support both 'mode' key and legacy 'script' key
+    const cfg = MODE_SCRIPTS[mode];
+    if (!cfg) return sendJSON(res, 400, { error: 'Unknown mode: ' + mode });
     console.log(`[mac] Launching ${cfg.label}...`);
     try {
-      const tmpFile = `/tmp/qhub_${body.mode}.applescript`;
+      const tmpFile = `/tmp/qhub_${mode}.applescript`;
       fs.writeFileSync(tmpFile, cfg.script);
       await execAsync(`osascript "${tmpFile}"`);
+      currentMode = mode;
       console.log(`[mac] ${cfg.label} done`);
-      return sendJSON(res, 200, { ok: true, mode: body.mode });
+      return sendJSON(res, 200, { ok: true, mode });
     } catch (e) {
       console.error('[mac] error:', e.message);
       return sendJSON(res, 200, { ok: false, error: e.message });
     }
   }
 
+  // ── Proxy voice + tasks to Vercel (Redis) ────────────────────────────────
   if (url === '/api/voice' || url === '/api/tasks' || url === '/api/test') {
     if (req.headers['x-qhub-token'] !== SECRET) return sendJSON(res, 401, { error: 'Unauthorized' });
     const body = await parseBody(req);
@@ -149,5 +180,6 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`\n  Q · HUB running at http://localhost:${PORT}`);
   console.log(`  Mac control: ACTIVE`);
-  console.log(`  BLKBOX mode: tmux attach -t blackbox via blkbx alias\n`);
+  console.log(`  Mode state: polling available at GET /api/mode`);
+  console.log(`  Auto-started via LaunchAgent — no terminal needed\n`);
 });
